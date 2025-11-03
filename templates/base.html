@@ -452,7 +452,7 @@
     </header>
 
     <!-- Mobile Menu -->
-    <div id="mobileMenu" class="hidden glass-morphism md:hidden absolute top-full left-0 right-0 z-30">
+    <div id="mobileMenu" class="hidden glass-morphism md:hidden absolute left-0 right-0 z-50" style="top:72px;max-height:calc(100vh - 72px);overflow-y:auto;backdrop-filter:blur(16px);">
         <nav class="flex flex-col p-4 space-y-3">
             <a href="{% url 'home' %}#home" class="mobile-nav-link hover:bg-purple-500 hover:bg-opacity-20 p-3 rounded-lg transition">হোম</a>
             <a href="{% url 'home' %}#features" class="mobile-nav-link hover:bg-purple-500 hover:bg-opacity-20 p-3 rounded-lg transition">বৈশিষ্ট্য</a>
@@ -553,9 +553,6 @@
                 menuToggle.addEventListener('click', function() {
                     const mobileMenu = document.getElementById('mobileMenu');
                     mobileMenu.classList.toggle('hidden');
-                    if (!mobileMenu.classList.contains('hidden')) {
-                        mobileMenu.classList.add('slide-in');
-                    }
                 });
             }
             
