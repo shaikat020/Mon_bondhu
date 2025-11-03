@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- Pregnancy Tracker -->
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">💖 গর্ভাবস্থা ট্র্যাকার</h2>
+        <p style="color: #718096; margin-bottom: 2rem;">আপনার গর্ভাবস্থার যত্ন ও চেকআপের সময়সূচী ট্র্যাক করুন</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+            <!-- Pregnancy Form -->
+            <div style="background: #f0fff4; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #38a169;">
+                <h4 style="color: #2d3748; margin-bottom: 1rem;">গর্ভাবস্থার তথ্য যোগ করুন</h4>
+                <form id="pregnancyForm">
+                    {% csrf_token %}
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                            শেষ মাসিকের তারিখ: *
+                        </label>
+                        <input type="date" name="last_period_date" required 
+                               style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <button type="submit" class="btn" style="background: #38a169; color: white; width: 100%;">
+                        ট্র্যাকার শুরু করুন
+                    </button>
+                </form>
+            </div>
+            
+            <!-- ANC Schedule -->
+            <div style="background: #fffaf0; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #dd6b20;">
+                <h4 style="color: #2d3748; margin-bottom: 1rem;">গর্ভকালীন যত্ন (ANC) সময়সূচী</h4>
+                <div style="color: #718096;">
+                    <p>• ১ম ভিজিট: ১২ সপ্তাহের মধ্যে</p>
+                    <p>• ২য় ভিজিট: ২৬-২৮ সপ্তাহ</p>
+                    <p>• ৩য় ভিজিট: ৩২ সপ্তাহ</p>
+                    <p>• ৪র্থ ভিজিট: ৩৬ সপ্তাহ</p>
+                    <p>• পরবর্তী ভিজিট: প্রতি ২ সপ্তাহে</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pregnancy Progress -->
+        <div id="pregnancyProgress" style="display: none;">
+            <h3 style="color: #4a5568; margin-bottom: 1rem;">আপনার গর্ভাবস্থার অগ্রগতি</h3>
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; text-align: center;">
+                    <div>
+                        <div style="font-size: 2rem;" id="currentWeek">০</div>
+                        <div>সপ্তাহ</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem;" id="daysLeft">০</div>
+                        <div>দিন বাকি</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem;" id="trimester">১</div>
+                        <div>ট্রাইমেস্টার</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Upcoming Checkups -->
+            <div style="margin-bottom: 2rem;">
+                <h4 style="color: #2d3748; margin-bottom: 1rem;">আসন্ন চেকআপ</h4>
+                <div id="upcomingCheckups" style="display: grid; gap: 1rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vaccination Tracker -->
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">💉 শিশু টিকাকরণ ট্র্যাকার</h2>
+        <p style="color: #718096; margin-bottom: 2rem;">আপনার শিশুর টিকার সম্পূর্ণ সময়সূচী ট্র্যাক করুন</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Add Child Form -->
+            <div style="background: #f0fff4; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #2d3748; margin-bottom: 1rem;">শিশুর তথ্য যোগ করুন</h4>
+                <form id="childForm">
+                    {% csrf_token %}
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                            শিশুর নাম:
+                        </label>
+                        <input type="text" name="child_name" required 
+                               style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                            জন্ম তারিখ: *
+                        </label>
+                        <input type="date" name="birth_date" required 
+                               style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <button type="submit" class="btn" style="background: #38a169; color: white; width: 100%;">
+                        শিশু যোগ করুন
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Vaccination Schedule -->
+            <div style="background: #fffaf0; padding: 1.5rem; border-radius: 10px;">
+                <h4 style="color: #2d3748; margin-bottom: 1rem;">টিকা সময়সূচী (EPI)</h4>
+                <div style="color: #718096; font-size: 0.9rem;">
+                    <p>• জন্ম: BCG, OPV-0</p>
+                    <p>• ৬ সপ্তাহ: Penta-1, OPV-1</p>
+                    <p>• ১০ সপ্তাহ: Penta-2, OPV-2</p>
+                    <p>• ১৪ সপ্তাহ: Penta-3, OPV-3</p>
+                    <p>• ৯ মাস: MR-1</p>
+                    <p>• ১৫ মাস: MR-2</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Children List -->
+        <div id="childrenList" style="margin-top: 2rem;"></div>
+    </div>
+
+    <!-- Important Notes -->
+    <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 10px; margin: 2rem 0;">
+        <h4 style="color: #856404; margin-bottom: 1rem;">📝 গুরুত্বপূর্ণ তথ্য</h4>
+        <ul style="color: #856404; padding-left: 1.5rem;">
+            <li>সমস্ত তথ্য শুধুমাত্র আপনার ডিভাইসে সংরক্ষিত হয়</li>
+            <li>টিকার কার্ড হারিয়ে গেলে এই তথ্য ব্যবহার করুন</li>
+            <li>জরুরী লক্ষণ দেখলে立即 হাসপাতালে যান</li>
+            <li>নিয়মিতভাবে কমিউনিটি ক্লিনিকে যান</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+.vaccine-card {
+    background: white;
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.vaccine-card.completed {
+    border-color: #38a169;
+    background: #f0fff4;
+}
+
+.vaccine-card.pending {
+    border-color: #ed8936;
+    background: #fffaf0;
+}
+
+.vaccine-card.overdue {
+    border-color: #e53e3e;
+    background: #fed7d7;
+}
+
+.checkup-card {
+    background: #f7fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    margin-bottom: 1rem;
+}
+</style>
+
+<script>
+// Pregnancy Calculator
+document.getElementById('pregnancyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const lastPeriodDate = new Date(this.last_period_date.value);
+    const expectedDelivery = new Date(lastPeriodDate);
+    expectedDelivery.setDate(expectedDelivery.getDate() + 280);
+    
+    const today = new Date();
+    const weeksPregnant = Math.floor((today - lastPeriodDate) / (7 * 24 * 60 * 60 * 1000));
+    const daysLeft = Math.floor((expectedDelivery - today) / (24 * 60 * 60 * 1000));
+    const trimester = weeksPregnant < 13 ? 1 : weeksPregnant < 27 ? 2 : 3;
+    
+    // Update display
+    document.getElementById('currentWeek').textContent = weeksPregnant;
+    document.getElementById('daysLeft').textContent = daysLeft;
+    document.getElementById('trimester').textContent = trimester;
+    
+    // Generate upcoming checkups
+    const checkups = generateCheckups(lastPeriodDate);
+    displayCheckups(checkups);
+    
+    document.getElementById('pregnancyProgress').style.display = 'block';
+    
+    // Save to localStorage
+    const pregnancyData = {
+        lastPeriodDate: lastPeriodDate.toISOString(),
+        expectedDelivery: expectedDelivery.toISOString()
+    };
+    localStorage.setItem('pregnancyData', JSON.stringify(pregnancyData));
+});
+
+function generateCheckups(lastPeriodDate) {
+    const checkups = [
+        { name: '১ম ANC ভিজিট', weeks: 12 },
+        { name: '২য় ANC ভিজিট', weeks: 26 },
+        { name: '৩য় ANC ভিজিট', weeks: 32 },
+        { name: '৪র্থ ANC ভিজিট', weeks: 36 },
+        { name: '৫ম ANC ভিজিট', weeks: 38 },
+        { name: '৬ষ্ঠ ANC ভিজিট', weeks: 40 }
+    ];
+    
+    return checkups.map(checkup => {
+        const date = new Date(lastPeriodDate);
+        date.setDate(date.getDate() + (checkup.weeks * 7));
+        return {
+            name: checkup.name,
+            date: date,
+            weeks: checkup.weeks
+        };
+    });
+}
+
+function displayCheckups(checkups) {
+    const container = document.getElementById('upcomingCheckups');
+    const today = new Date();
+    
+    container.innerHTML = checkups.map(checkup => {
+        const isUpcoming = checkup.date > today;
+        const daysUntil = Math.ceil((checkup.date - today) / (24 * 60 * 60 * 1000));
+        
+        if (isUpcoming) {
+            return `
+                <div class="checkup-card">
+                    <div style="display: flex; justify-content: between; align-items: center;">
+                        <div>
+                            <strong>${checkup.name}</strong>
+                            <div style="color: #718096; font-size: 0.9rem;">
+                                ${checkup.date.toLocaleDateString('bn-BD')} • ${checkup.weeks} সপ্তাহ
+                            </div>
+                        </div>
+                        <div style="background: #ed8936; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                            ${daysUntil} দিন বাকি
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        return '';
+    }).join('');
+}
+
+// Vaccination Tracker
+document.getElementById('childForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const childData = {
+        name: this.child_name.value,
+        birthDate: this.birth_date.value,
+        vaccines: generateVaccineSchedule(new Date(this.birth_date.value))
+    };
+    
+    saveChildData(childData);
+    displayChildren();
+    this.reset();
+});
+
+function generateVaccineSchedule(birthDate) {
+    const vaccines = [
+        { name: 'BCG (যক্ষ্মা)', type: 'bcg', days: 0 },
+        { name: 'OPV-0 (পোলিও)', type: 'opv0', days: 0 },
+        { name: 'Penta-1 (পেন্টা)', type: 'penta1', days: 42 },
+        { name: 'OPV-1 (পোলিও)', type: 'opv1', days: 42 },
+        { name: 'Penta-2 (পেন্টা)', type: 'penta2', days: 70 },
+        { name: 'OPV-2 (পোলিও)', type: 'opv2', days: 70 },
+        { name: 'Penta-3 (পেন্টা)', type: 'penta3', days: 98 },
+        { name: 'OPV-3 (পোলিও)', type: 'opv3', days: 98 },
+        { name: 'MR-1 (হাম ও রুবেলা)', type: 'mr1', days: 270 },
+        { name: 'MR-2 (হাম ও রুবেলা)', type: 'mr2', days: 450 }
+    ];
+    
+    return vaccines.map(vaccine => {
+        const date = new Date(birthDate);
+        date.setDate(date.getDate() + vaccine.days);
+        return {
+            ...vaccine,
+            scheduledDate: date,
+            completed: false
+        };
+    });
+}
+
+function saveChildData(childData) {
+    let children = JSON.parse(localStorage.getItem('children') || '[]');
+    children.push(childData);
+    localStorage.setItem('children', JSON.stringify(children));
+}
+
+function displayChildren() {
+    const container = document.getElementById('childrenList');
+    const children = JSON.parse(localStorage.getItem('children') || '[]');
+    const today = new Date();
+    
+    container.innerHTML = children.map((child, index) => {
+        const pendingVaccines = child.vaccines.filter(v => !v.completed && new Date(v.scheduledDate) <= today);
+        const upcomingVaccines = child.vaccines.filter(v => !v.completed && new Date(v.scheduledDate) > today);
+        
+        return `
+            <div style="background: #f7fafc; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+                    <h4 style="color: #2d3748; margin: 0;">${child.name}</h4>
+                    <div style="color: #718096;">
+                        জন্ম: ${new Date(child.birthDate).toLocaleDateString('bn-BD')}
+                    </div>
+                </div>
+                
+                ${pendingVaccines.length > 0 ? `
+                    <div style="color: #e53e3e; margin-bottom: 1rem;">
+                        <strong>বকেয়া টিকা:</strong> ${pendingVaccines.length}টি
+                    </div>
+                ` : ''}
+                
+                <div style="display: grid; gap: 0.5rem;">
+                    ${child.vaccines.map(vaccine => {
+                        const vaccineDate = new Date(vaccine.scheduledDate);
+                        const isOverdue = !vaccine.completed && vaccineDate < today;
+                        const isPending = !vaccine.completed && vaccineDate >= today;
+                        
+                        let statusClass = 'completed';
+                        let statusText = 'সম্পন্ন';
+                        
+                        if (isOverdue) {
+                            statusClass = 'overdue';
+                            statusText = 'বকেয়া';
+                        } else if (isPending) {
+                            statusClass = 'pending';
+                            statusText = 'অপেক্ষমান';
+                        }
+                        
+                        return `
+                            <div class="vaccine-card ${statusClass}">
+                                <div style="display: flex; justify-content: between; align-items: center;">
+                                    <div>
+                                        <strong>${vaccine.name}</strong>
+                                        <div style="color: #718096; font-size: 0.9rem;">
+                                            ${vaccineDate.toLocaleDateString('bn-BD')}
+                                        </div>
+                                    </div>
+                                    <div style="background: ${isOverdue ? '#e53e3e' : isPending ? '#ed8936' : '#38a169'}; 
+                                         color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.8rem;">
+                                        ${statusText}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Load saved data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    displayChildren();
+    
+    // Load pregnancy data if exists
+    const pregnancyData = localStorage.getItem('pregnancyData');
+    if (pregnancyData) {
+        const data = JSON.parse(pregnancyData);
+        document.querySelector('input[name="last_period_date"]').value = data.lastPeriodDate.split('T')[0];
+        document.getElementById('pregnancyForm').dispatchEvent(new Event('submit'));
+    }
+});
+</script>
+{% endblock %}

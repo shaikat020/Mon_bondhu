@@ -54,3 +54,15 @@ def help_request(request):
 
 def health_tips(request):
     return render(request, "health_tips.html")
+
+
+def maternal_tracker(request):
+    return render(request, "maternal_tracker.html")
+
+
+def symptom_guide(request):
+    return render(request, "symptom_guide.html")
+
+
+def health_events(request):
+    return render(request, "health_events.html")

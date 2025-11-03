@@ -1,0 +1,324 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">🩺 লক্ষণ নির্দেশিকা</h2>
+        <p style="color: #718096; margin-bottom: 2rem;">গুরুত্বপূর্ণ লক্ষণ চিনুন এবং জানুন কখন ডাক্তারের পরামর্শ নেবেন</p>
+        
+        <!-- Important Notice -->
+        <div style="background: #fed7d7; border: 1px solid #feb2b2; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+            <h4 style="color: #c53030; margin-bottom: 0.5rem;">⚠️ গুরুত্বপূর্ণ নোটিশ</h4>
+            <p style="color: #c53030; margin: 0;">
+                এটি একটি <strong>শিক্ষামূলক গাইড</strong> মাত্র, <strong>চিকিৎসা পরামর্শ নয়</strong>। 
+                কোনো জরুরী অবস্থায়立即 নিকটস্থ হাসপাতালে যান।
+            </p>
+        </div>
+
+        <!-- Symptom Categories -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
+            <button class="symptom-cat-btn active" data-category="all" onclick="filterSymptoms('all')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+                <div>সব লক্ষণ</div>
+            </button>
+            <button class="symptom-cat-btn" data-category="fever" onclick="filterSymptoms('fever')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌡️</div>
+                <div>জ্বর</div>
+            </button>
+            <button class="symptom-cat-btn" data-category="respiratory" onclick="filterSymptoms('respiratory')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">😮‍💨</div>
+                <div>শ্বাসকষ্ট</div>
+            </button>
+            <button class="symptom-cat-btn" data-category="digestive" onclick="filterSymptoms('digestive')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤢</div>
+                <div>পেটের সমস্যা</div>
+            </button>
+            <button class="symptom-cat-btn" data-category="mental" onclick="filterSymptoms('mental')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">😔</div>
+                <div>মানসিক স্বাস্থ্য</div>
+            </button>
+        </div>
+
+        <!-- Symptoms List -->
+        <div id="symptomsList">
+            <!-- Symptoms will be loaded here by JavaScript -->
+        </div>
+
+        <!-- Emergency Section -->
+        <div style="background: #fed7d7; padding: 2rem; border-radius: 15px; margin: 3rem 0;">
+            <h3 style="color: #c53030; margin-bottom: 1rem;">🚨 জরুরী অবস্থা -立即 হাসপাতালে যান</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    <h4 style="color: #2d3748; margin-bottom: 0.5rem;">💔 হার্ট অ্যাটাক</h4>
+                    <ul style="color: #718096; padding-left: 1rem; margin: 0;">
+                        <li>বুকে ব্যথা বা চাপ</li>
+                        <li>বাম হাতে ব্যথা</li>
+                        <li>শ্বাসকষ্ট</li>
+                        <li>ঠান্ডা ঘাম</li>
+                    </ul>
+                </div>
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    <h4 style="color: #2d3748; margin-bottom: 0.5rem;">🩸 স্ট্রোক</h4>
+                    <ul style="color: #718096; padding-left: 1rem; margin: 0;">
+                        <li>মুখ বেঁকে যাওয়া</li>
+                        <li>হাত-পা অবশ হওয়া</li>
+                        <li>কথা জড়িয়ে যাওয়া</li>
+                        <li>দৃষ্টিশক্তি ঝাপসা</li>
+                    </ul>
+                </div>
+                <div style="background: white; padding: 1rem; border-radius: 8px;">
+                    <h4 style="color: #2d3748; margin-bottom: 0.5rem;">🔴 গুরুতর রক্তক্ষরণ</h4>
+                    <ul style="color: #718096; padding-left: 1rem; margin: 0;">
+                        <li>অনবরত রক্তপাত</li>
+                        <li>রক্তবমি</li>
+                        <li>মলের সাথে রক্ত</li>
+                        <li>প্রচন্ড দুর্বলতা</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.symptom-cat-btn {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 1.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.symptom-cat-btn.active,
+.symptom-cat-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.symptom-card {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s;
+}
+
+.symptom-card:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.warning-level-high { border-left: 4px solid #e53e3e; }
+.warning-level-medium { border-left: 4px solid #ed8936; }
+.warning-level-low { border-left: 4px solid #38a169; }
+
+.warning-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 1rem;
+}
+
+.badge-high { background: #fed7d7; color: #c53030; }
+.badge-medium { background: #fefcbf; color: #744210; }
+.badge-low { background: #c6f6d5; color: #276749; }
+</style>
+
+<script>
+// Symptom data
+const symptomsData = [
+    {
+        id: 1,
+        category: 'fever',
+        name: 'উচ্চ জ্বর',
+        description: '১০২°F (৩৯°C) এর以上 জ্বর',
+        warningLevel: 'high',
+        homeCare: [
+            'প্যারাসিটামল ট্যাবলেট নিন',
+            'পানিশূন্যতা রোধে বেশি করে পানি পান করুন',
+            'গা মুছে দিন',
+            'হালকা সুতি কাপড় পরুন'
+        ],
+        whenToSeeDoctor: [
+            'জ্বর ৩ দিনের বেশি থাকলে',
+            'শিশুর জ্বর ১০১°F এর以上 থাকলে',
+            'খিঁচুনি বা অজ্ঞান হলে',
+            'গলা ব্যথা বা র্যাশ সহ জ্বর হলে'
+        ],
+        emergency: 'খিঁচুনি, অজ্ঞান হওয়া, বা শ্বাসকষ্ট হলে立即 হাসপাতালে যান'
+    },
+    {
+        id: 2,
+        category: 'respiratory',
+        name: 'শ্বাসকষ্ট',
+        description: 'শ্বাস নিতে কষ্ট হওয়া বা দম আটকে আসা feeling',
+        warningLevel: 'high',
+        homeCare: [
+            'সোজা হয়ে বসুন',
+            'গভীর শ্বাস নেওয়ার চেষ্টা করুন',
+            'বাতাস চলাচল করে এমন জায়গায় যান',
+            'আরামদায়ক পোশাক পরুন'
+        ],
+        whenToSeeDoctor: [
+            'হাঁটতে বা কথা বলতে কষ্ট হলে',
+            'নীলচে lips বা nails হলে',
+            'বুকে ব্যথা সহ শ্বাসকষ্ট',
+            'আবেশিক অবস্থা হলে'
+        ],
+        emergency: 'নীলচে ত্বক, কথা বলতে inability, বা severe বুকে ব্যথা হলে立即 হাসপাতালে যান'
+    },
+    {
+        id: 3,
+        category: 'digestive',
+        name: 'ডায়রিয়া',
+        description: 'বারবার পাতলা পায়খানা হওয়া',
+        warningLevel: 'medium',
+        homeCare: [
+            'ওআরএস খান',
+            'হালকা খাবার (ভাত, ডাল) খান',
+            'পর্যাপ্ত বিশ্রাম নিন',
+            'পরিষ্কার-পরিচ্ছন্ন থাকুন'
+        ],
+        whenToSeeDoctor: [
+            '৩ দিনের বেশি ডায়রিয়া থাকলে',
+            'রক্ত বা পুঁজ mixed থাকলে',
+            'severe পেটে ব্যথা হলে',
+            'প্রস্রাব কমে গেলে'
+        ],
+        emergency: 'অজ্ঞান হওয়া, severe dehydration, বা রক্তবমি হলে立即 হাসপাতালে যান'
+    },
+    {
+        id: 4,
+        category: 'mental',
+        name: 'দুশ্চিন্তা ও panic attack',
+        description: 'অকারণ ভয়, nervousness, বা panic feeling',
+        warningLevel: 'medium',
+        homeCare: [
+            'গভীর শ্বাস নিন (৪ সেকেন্ড শ্বাস, ৪ সেকেন্ড রাখুন, ৪ সেকেন্ড ছাড়ুন)',
+            'বিশ্রাম নিন',
+            'কাছে trusted মানুষের সাথে কথা বলুন',
+            'হালকা ব্যায়াম করুন'
+        ],
+        whenToSeeDoctor: [
+            'দৈনন্দিন কাজে বাধা পড়লে',
+            '২ সপ্তাহের বেশি চললে',
+            'নিজের বা others ক্ষতি করার thoughts থাকলে',
+            'sleep বা appetite严重影响 হলে'
+        ],
+        emergency: 'নিজের ক্ষতি করার thoughts বা প্রচন্ড panic attack হলে立即 সাহায্য নিন'
+    },
+    {
+        id: 5,
+        category: 'fever',
+        name: 'ডেঙ্গু জ্বর',
+        description: 'মশাবাহিত viral fever',
+        warningLevel: 'high',
+        homeCare: [
+            'পর্যাপ্ত পানি পান করুন',
+            'প্যারাসিটামল নিন (এসপিরিন এড়িয়ে চলুন)',
+            'পূর্ণ বিশ্রাম নিন',
+            'মশারি ব্যবহার করুন'
+        ],
+        whenToSeeDoctor: [
+            'জ্বরের সাথে severe মাথাব্যথা',
+            'চোখের পিছনে ব্যথা',
+            'body rash দেখা দিলে',
+            'বমি বা পেটে ব্যথা হলে'
+        ],
+        emergency: 'রক্তবমি, মলের সাথে রক্ত, বা severe abdominal pain হলে立即 হাসপাতালে যান'
+    },
+    {
+        id: 6,
+        category: 'mental',
+        name: 'দীর্ঘস্থায়ী দুঃখবোধ',
+        description: '২ সপ্তাহের বেশি সময় ধরে depressed feeling',
+        warningLevel: 'medium',
+        homeCare: [
+            'নিয়মিত routine maintain করুন',
+            'ছোট ছোট achievable goals set করুন',
+            'বাইরে হাঁটতে যান',
+            'নিজের প্রতি gentle থাকুন'
+        ],
+        whenToSeeDoctor: [
+            '২ সপ্তাহের বেশি depressed feeling',
+            'sleep বা appetite পরিবর্তন',
+            'আনন্দদায়ক activities interest হারালে',
+            'কাজে concentration সমস্যা'
+        ],
+        emergency: 'আত্মহত্যার thoughts বা plans থাকলে立即 মানসিক স্বাস্থ্য professional এর সাহায্য নিন'
+    }
+];
+
+function displaySymptoms(category = 'all') {
+    const container = document.getElementById('symptomsList');
+    const filteredSymptoms = category === 'all' 
+        ? symptomsData 
+        : symptomsData.filter(symptom => symptom.category === category);
+    
+    container.innerHTML = filteredSymptoms.map(symptom => {
+        const warningClass = `warning-level-${symptom.warningLevel}`;
+        const badgeClass = `badge-${symptom.warningLevel}`;
+        const badgeText = symptom.warningLevel === 'high' ? 'উচ্চ সতর্কতা' : 
+                         symptom.warningLevel === 'medium' ? 'মধ্যম সতর্কতা' : 'নিম্ন সতর্কতা';
+        
+        return `
+            <div class="symptom-card ${warningClass}" data-category="${symptom.category}">
+                <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                    <div style="flex: 1;">
+                        <h3 style="color: #2d3748; margin-bottom: 0.5rem;">${symptom.name}</h3>
+                        <p style="color: #718096; margin: 0;">${symptom.description}</p>
+                    </div>
+                    <span class="warning-badge ${badgeClass}">${badgeText}</span>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div>
+                        <h4 style="color: #4a5568; margin-bottom: 0.5rem;">🏠 ঘরোয়া যত্ন</h4>
+                        <ul style="color: #718096; padding-left: 1rem; margin: 0;">
+                            ${symptom.homeCare.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: #4a5568; margin-bottom: 0.5rem;">🏥 কখন ডাক্তার দেখাবেন</h4>
+                        <ul style="color: #718096; padding-left: 1rem; margin: 0;">
+                            ${symptom.whenToSeeDoctor.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                ${symptom.emergency ? `
+                    <div style="background: #fed7d7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <strong style="color: #c53030;">🚨 জরুরী:</strong> 
+                        <span style="color: #c53030;">${symptom.emergency}</span>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+function filterSymptoms(category) {
+    // Update active button
+    document.querySelectorAll('.symptom-cat-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-category="${category}"]`).classList.add('active');
+    
+    // Display filtered symptoms
+    displaySymptoms(category);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    displaySymptoms('all');
+});
+</script>
+{% endblock %}

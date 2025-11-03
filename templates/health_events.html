@@ -1,0 +1,404 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">🎪 কমিউনিটি স্বাস্থ্য ইভেন্ট</h2>
+        <p style="color: #718096; margin-bottom: 2rem;">আপনার এলাকার আসন্ন স্বাস্থ্য ক্যাম্প, টিকাদান ও সচেতনতা কর্মসূচী</p>
+        
+        <!-- Event Filters -->
+        <div style="background: #f7fafc; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; margin-bottom: 1rem;">
+                <input type="text" id="searchEvents" placeholder="ইভেন্ট বা স্থান খুঁজুন..." 
+                       style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
+                <select id="eventTypeFilter" style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
+                    <option value="all">সব ধরণের ইভেন্ট</option>
+                    <option value="health_camp">স্বাস্থ্য ক্যাম্প</option>
+                    <option value="vaccination">টিকাদান</option>
+                    <option value="screening">স্ক্রীনিং</option>
+                    <option value="awareness">সচেতনতা</option>
+                    <option value="blood_donation">রক্তদান</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="filter-btn active" onclick="filterEvents('all')">সব ইভেন্ট</button>
+                <button class="filter-btn" onclick="filterEvents('upcoming')">আসন্ন ইভেন্ট</button>
+                <button class="filter-btn" onclick="filterEvents('today')">আজকের ইভেন্ট</button>
+                <button class="filter-btn" onclick="filterEvents('this_week')">এই সপ্তাহ</button>
+            </div>
+        </div>
+
+        <!-- Events List -->
+        <div id="eventsList">
+            <!-- Events will be loaded here -->
+        </div>
+
+        <!-- No Events Message -->
+        <div id="noEvents" style="display: none; text-align: center; padding: 3rem; color: #718096;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📅</div>
+            <h3>কোন ইভেন্ট পাওয়া যায়নি</h3>
+            <p>আপনার এলাকায় এখনই কোন স্বাস্থ্য ইভেন্ট নেই। শীঘ্রই নতুন ইভেন্ট যোগ করা হবে।</p>
+        </div>
+    </div>
+
+    <!-- Add Event Form (For demonstration) -->
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h3 style="color: #4a5568; margin-bottom: 1rem;">ইভেন্ট যোগ করুন</h3>
+        <p style="color: #718096; margin-bottom: 2rem;">নতুন স্বাস্থ্য ইভেন্টের তথ্য যোগ করুন (ডেমো উদ্দেশ্যে)</p>
+        
+        <form id="addEventForm" style="display: grid; gap: 1rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        ইভেন্টের নাম *
+                    </label>
+                    <input type="text" name="title" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        ইভেন্টের ধরণ *
+                    </label>
+                    <select name="event_type" required 
+                            style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        <option value="">নির্বাচন করুন</option>
+                        <option value="health_camp">স্বাস্থ্য ক্যাম্প</option>
+                        <option value="vaccination">টিকাদান কর্মসূচী</option>
+                        <option value="screening">স্বাস্থ্য স্ক্রীনিং</option>
+                        <option value="awareness">সচেতনতা সেশন</option>
+                        <option value="blood_donation">রক্তদান শিবির</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div>
+                <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                    বিবরণ
+                </label>
+                <textarea name="description" 
+                          style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; min-height: 80px; resize: vertical;"></textarea>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        তারিখ *
+                    </label>
+                    <input type="date" name="date" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        শুরু সময় *
+                    </label>
+                    <input type="time" name="start_time" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        শেষ সময় *
+                    </label>
+                    <input type="time" name="end_time" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        স্থান *
+                    </label>
+                    <input type="text" name="location" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        আয়োজক *
+                    </label>
+                    <input type="text" name="organizer" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn" style="background: #667eea; color: white;">
+                ইভেন্ট যোগ করুন
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid #e2e8f0;
+    background: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.event-card {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s;
+}
+
+.event-card:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.event-card.urgent {
+    border-left: 4px solid #e53e3e;
+    background: #fff5f5;
+}
+
+.event-card.upcoming {
+    border-left: 4px solid #38a169;
+    background: #f0fff4;
+}
+
+.event-type-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.badge-health_camp { background: #bee3f8; color: #2c5282; }
+.badge-vaccination { background: #c6f6d5; color: #276749; }
+.badge-screening { background: #fefcbf; color: #744210; }
+.badge-awareness { background: #e9d8fd; color: #553c9a; }
+.badge-blood_donation { background: #fed7d7; color: #c53030; }
+</style>
+
+<script>
+// Sample events data
+let eventsData = [
+    {
+        id: 1,
+        title: "বিনামূল্যে ডায়াবেটিস স্ক্রীনিং ক্যাম্প",
+        event_type: "screening",
+        description: "বিনামূল্যে রক্তের শর্করা পরীক্ষা ও ডায়াবেটিস সম্পর্কিত পরামর্শ",
+        date: "2024-12-15",
+        start_time: "09:00",
+        end_time: "14:00",
+        location: "চর কলাপাড়া কমিউনিটি সেন্টার",
+        upazila: "চরফ্যাশন",
+        union: "চর কলাপাড়া",
+        organizer: "স্বাস্থ্য বিভাগ, চরফ্যাশন",
+        contact: "০১৮১২-৩৪৫৬৭৮"
+    },
+    {
+        id: 2,
+        title: "শিশু টিকাকরণ কর্মসূচী",
+        event_type: "vaccination",
+        description: "সমস্ত EPI টিকা বিনামূল্যে প্রদান",
+        date: "2024-12-18",
+        start_time: "08:00",
+        end_time: "12:00",
+        location: "চর কলাপাড়া কমিউনিটি ক্লিনিক",
+        upazila: "চরফ্যাশন",
+        union: "চর কলাপাড়া",
+        organizer: "কমিউনিটি ক্লিনিক",
+        contact: "০১৭১১-২২৩৩৪৪"
+    },
+    {
+        id: 3,
+        title: "মানসিক স্বাস্থ্য সচেতনতা সেশন",
+        event_type: "awareness",
+        description: "মানসিক স্বাস্থ্য সম্পর্কিত আলোচনা ও প্রশ্নোত্তর পর্ব",
+        date: "2024-12-20",
+        start_time: "15:00",
+        end_time: "17:00",
+        location: "স্থানীয় উচ্চ বিদ্যালয়",
+        upazila: "চরফ্যাশন",
+        union: "চর কলাপাড়া",
+        organizer: "মনবন্ধু টিম",
+        contact: ""
+    }
+];
+
+function displayEvents(events = eventsData) {
+    const container = document.getElementById('eventsList');
+    const noEvents = document.getElementById('noEvents');
+    
+    if (events.length === 0) {
+        container.style.display = 'none';
+        noEvents.style.display = 'block';
+        return;
+    }
+    
+    container.style.display = 'block';
+    noEvents.style.display = 'none';
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    container.innerHTML = events.map(event => {
+        const eventDate = new Date(event.date);
+        const isToday = eventDate.toDateString() === today.toDateString();
+        const isUpcoming = eventDate >= today;
+        const isUrgent = isToday || (eventDate - today) / (24 * 60 * 60 * 1000) <= 2;
+        
+        let cardClass = 'event-card';
+        if (isUrgent) cardClass += ' urgent';
+        else if (isUpcoming) cardClass += ' upcoming';
+        
+        const eventTypeText = {
+            'health_camp': 'স্বাস্থ্য ক্যাম্প',
+            'vaccination': 'টিকাদান',
+            'screening': 'স্ক্রীনিং',
+            'awareness': 'সচেতনতা',
+            'blood_donation': 'রক্তদান'
+        };
+        
+        return `
+            <div class="${cardClass}">
+                <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                    <div style="flex: 1;">
+                        <h3 style="color: #2d3748; margin-bottom: 0.5rem;">${event.title}</h3>
+                        <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span class="event-type-badge badge-${event.event_type}">
+                                ${eventTypeText[event.event_type]}
+                            </span>
+                            <span style="color: #718096; font-size: 0.9rem;">
+                                ${eventDate.toLocaleDateString('bn-BD')} • ${event.start_time} - ${event.end_time}
+                            </span>
+                        </div>
+                        <p style="color: #718096; margin: 0;">${event.description}</p>
+                    </div>
+                    ${isUrgent ? `
+                        <div style="background: #e53e3e; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                            ${isToday ? 'আজ' : 'শীঘ্রই'}
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: end;">
+                    <div>
+                        <div style="color: #4a5568; margin-bottom: 0.5rem;">
+                            <strong>স্থান:</strong> ${event.location}
+                        </div>
+                        <div style="color: #4a5568;">
+                            <strong>আয়োজক:</strong> ${event.organizer}
+                            ${event.contact ? ` • <strong>যোগাযোগ:</strong> ${event.contact}` : ''}
+                        </div>
+                    </div>
+                    <button class="btn" style="background: #667eea; color: white; white-space: nowrap;" 
+                            onclick="remindEvent(${event.id})">
+                        📅 রিমাইন্ডার সেট করুন
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function filterEvents(filterType) {
+    // Update active button
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const nextWeek = new Date(today);
+    nextWeek.setDate(nextWeek.getDate() + 7);
+    
+    let filteredEvents = eventsData;
+    
+    switch (filterType) {
+        case 'upcoming':
+            filteredEvents = eventsData.filter(event => new Date(event.date) >= today);
+            break;
+        case 'today':
+            filteredEvents = eventsData.filter(event => new Date(event.date).toDateString() === today.toDateString());
+            break;
+        case 'this_week':
+            filteredEvents = eventsData.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate >= today && eventDate <= nextWeek;
+            });
+            break;
+    }
+    
+    // Apply search filter
+    const searchTerm = document.getElementById('searchEvents').value.toLowerCase();
+    if (searchTerm) {
+        filteredEvents = filteredEvents.filter(event => 
+            event.title.toLowerCase().includes(searchTerm) ||
+            event.location.toLowerCase().includes(searchTerm) ||
+            event.organizer.toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    // Apply type filter
+    const typeFilter = document.getElementById('eventTypeFilter').value;
+    if (typeFilter !== 'all') {
+        filteredEvents = filteredEvents.filter(event => event.event_type === typeFilter);
+    }
+    
+    displayEvents(filteredEvents);
+}
+
+function remindEvent(eventId) {
+    const event = eventsData.find(e => e.id === eventId);
+    if (event) {
+        alert(`রিমাইন্ডার সেট করা হয়েছে: ${event.title}\nতারিখ: ${new Date(event.date).toLocaleDateString('bn-BD')}`);
+        // In a real app, this would integrate with device calendar
+    }
+}
+
+// Add event form handler
+document.getElementById('addEventForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const newEvent = {
+        id: eventsData.length + 1,
+        title: formData.get('title'),
+        event_type: formData.get('event_type'),
+        description: formData.get('description'),
+        date: formData.get('date'),
+        start_time: formData.get('start_time'),
+        end_time: formData.get('end_time'),
+        location: formData.get('location'),
+        upazila: 'চরফ্যাশн', // Default for demo
+        union: 'চর কলাপাড়া', // Default for demo
+        organizer: formData.get('organizer'),
+        contact: ''
+    };
+    
+    eventsData.push(newEvent);
+    displayEvents(eventsData);
+    this.reset();
+    
+    alert('ইভেন্ট সফলভাবে যোগ করা হয়েছে!');
+});
+
+// Search and filter event listeners
+document.getElementById('searchEvents').addEventListener('input', filterEvents);
+document.getElementById('eventTypeFilter').addEventListener('change', filterEvents);
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    displayEvents();
+});
+</script>
+{% endblock %}

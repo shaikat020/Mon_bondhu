@@ -54,3 +54,65 @@ class AnonymousHelpRequest(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+
+
+class PregnancyTracker(models.Model):
+    last_period_date = models.DateField()
+    expected_delivery_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.expected_delivery_date and self.last_period_date:
+            # Calculate expected delivery date (40 weeks from last period)
+            self.expected_delivery_date = self.last_period_date + timedelta(days=280)
+        super().save(*args, **kwargs)
+
+
+class ChildVaccination(models.Model):
+    child_name = models.CharField(max_length=100)
+    birth_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class VaccinationRecord(models.Model):
+    VACCINE_CHOICES = [
+        ("bcg", "BCG (যক্ষ্মা)"),
+        ("opv0", "OPV-0 (পোলিও)"),
+        ("penta1", "Penta-1 (পেন্টাভ্যালেন্ট)"),
+        ("penta2", "Penta-2 (পেন্টাভ্যালেন্ট)"),
+        ("penta3", "Penta-3 (পেন্টাভ্যালেন্ট)"),
+        ("mr1", "MR-1 (হাম ও রুবেলা)"),
+        ("mr2", "MR-2 (হাম ও রুবেলা)"),
+    ]
+
+    child = models.ForeignKey(ChildVaccination, on_delete=models.CASCADE)
+    vaccine_type = models.CharField(max_length=20, choices=VACCINE_CHOICES)
+    scheduled_date = models.DateField()
+    administered_date = models.DateField(null=True, blank=True)
+    is_completed = models.BooleanField(default=False)
+
+
+class HealthEvent(models.Model):
+    EVENT_TYPES = [
+        ("health_camp", "স্বাস্থ্য ক্যাম্প"),
+        ("vaccination", "টিকাদান কর্মসূচী"),
+        ("screening", "স্বাস্থ্য স্ক্রীনিং"),
+        ("awareness", "সচেতনতা সেশন"),
+        ("blood_donation", "রক্তদান শিবির"),
+    ]
+
+    title = models.CharField(max_length=200)
+    event_type = models.CharField(max_length=20, choices=EVENT_TYPES)
+    description = models.TextField()
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    location = models.TextField()
+    upazila = models.CharField(max_length=100)
+    union = models.CharField(max_length=100)
+    organizer = models.CharField(max_length=200)
+    contact = models.CharField(max_length=20, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["date", "start_time"]

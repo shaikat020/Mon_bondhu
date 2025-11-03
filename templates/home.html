@@ -9,6 +9,7 @@
 
 <section class="container">
     <!-- In the features section, update to include links -->
+<!-- Update the features grid to include all missions -->
 <div id="features" class="features">
     <div class="feature-card">
         <div class="feature-icon">😊</div>
@@ -36,6 +37,27 @@
         <h3>মৌসুমী স্বাস্থ্য টিপস</h3>
         <p>বর্ষা, শীত, গ্রীষ্ম - প্রতিটি মৌসুমের জন্য স্বাস্থ্য সুরক্ষা টিপস</p>
         <a href="{% url 'health_tips' %}" class="btn" style="margin-top: 1rem; display: inline-block;">দেখুন</a>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">👶</div>
+        <h3>মাতৃ ও শিশু স্বাস্থ্য</h3>
+        <p>গর্ভাবস্থা ট্র্যাকিং এবং শিশুর টিকা সময়সূচী ব্যবস্থাপনা</p>
+        <a href="{% url 'maternal_tracker' %}" class="btn" style="margin-top: 1rem; display: inline-block;">ট্র্যাক করুন</a>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">🩺</div>
+        <h3>লক্ষণ নির্দেশিকা</h3>
+        <p>গুরুত্বপূর্ণ লক্ষণ চিনুন এবং জানুন কখন ডাক্তারের পরামর্শ নেবেন</p>
+        <a href="{% url 'symptom_guide' %}" class="btn" style="margin-top: 1rem; display: inline-block;">শিখুন</a>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">🎪</div>
+        <h3>কমিউনিটি ইভেন্ট</h3>
+        <p>আপনার এলাকার স্বাস্থ্য ক্যাম্প, টিকাদান ও সচেতনতা কর্মসূচী</p>
+        <a href="{% url 'health_events' %}" class="btn" style="margin-top: 1rem; display: inline-block;">খুঁজুন</a>
     </div>
 </div>
 </section>

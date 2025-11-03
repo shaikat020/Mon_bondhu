@@ -18,17 +18,18 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
-        
+
+        /* ===== Navbar ===== */
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 1rem 2rem;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
-        
+
         .nav-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -36,58 +37,59 @@
             justify-content: space-between;
             align-items: center;
         }
-        
-        .logo {
+
+        .logo a {
             font-size: 1.8rem;
             font-weight: bold;
             color: #4a5568;
+            text-decoration: none;
         }
-        
+
         .logo span {
             color: #667eea;
         }
-        
+
         .nav-links {
             display: flex;
             gap: 2rem;
             list-style: none;
         }
-        
+
         .nav-links a {
             text-decoration: none;
             color: #4a5568;
             font-weight: 500;
             transition: color 0.3s;
         }
-        
+
         .nav-links a:hover {
             color: #667eea;
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .hero {
-            text-align: center;
+
+        /* ===== Sections ===== */
+        section {
             padding: 4rem 2rem;
             color: white;
+            text-align: center;
         }
-        
+
+        .hero {
+            color: white;
+            padding: 5rem 2rem;
+        }
+
         .hero h1 {
             font-size: 3.5rem;
             margin-bottom: 1rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-        
+
         .hero p {
             font-size: 1.3rem;
             margin-bottom: 2rem;
             opacity: 0.9;
         }
-        
+
         .btn {
             display: inline-block;
             padding: 12px 30px;
@@ -100,48 +102,46 @@
             border: none;
             cursor: pointer;
         }
-        
+
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-        
+
+        /* ===== Features Section ===== */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin: 4rem 0;
         }
-        
+
         .feature-card {
             background: white;
             padding: 2rem;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            color: #4a5568;
             transition: transform 0.3s;
         }
-        
+
         .feature-card:hover {
             transform: translateY(-5px);
         }
-        
+
         .feature-icon {
             font-size: 2.5rem;
             margin-bottom: 1rem;
         }
-        
-        .feature-card h3 {
-            color: #4a5568;
-            margin-bottom: 1rem;
-        }
-        
+
+        /* ===== Mission Section ===== */
         .mission-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin: 2rem 0;
         }
-        
+
         .mission-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -150,24 +150,35 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
         }
-        
+
         .mission-card h4 {
             margin-bottom: 0.5rem;
         }
-        
+
+        /* ===== Footer ===== */
         footer {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             color: white;
             text-align: center;
             padding: 2rem;
             margin-top: 4rem;
         }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
     </style>
 </head>
 <body>
+
+    <!-- ===== Navigation Bar ===== -->
     <nav class="navbar">
         <div class="nav-content">
-            <div class="logo">মন<span>বন্ধু</span></div>
+            <div class="logo">
+                <a href="{% url 'home' %}">
+                    মন<span>বন্ধু</span>
+                </a>
+            </div>
             <ul class="nav-links">
                 <li><a href="#home">হোম</a></li>
                 <li><a href="#features">ফিচারসমূহ</a></li>
@@ -177,22 +188,83 @@
         </div>
     </nav>
 
+    <!-- ===== Django Content Block ===== -->
     {% block content %}
+    
+    <!-- Home Section -->
+    <section id="home" class="hero">
+        <h1>স্বাগতম মনবন্ধুতে</h1>
+        <p>আপনার মানসিক স্বাস্থ্যের সাথী, যে প্রতিদিন পাশে থাকবে।</p>
+        <a href="#features" class="btn">আরও জানুন</a>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <h2>ফিচারসমূহ</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>পরামর্শ সহায়তা</h3>
+                <p>বিশেষজ্ঞ পরামর্শ ও মানসিক স্বাস্থ্যের সঠিক নির্দেশনা।</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>মানসিক বিশ্লেষণ</h3>
+                <p>আপনার মানসিক অবস্থার বিশ্লেষণ ও রিপোর্ট প্রদান।</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>কমিউনিটি সাপোর্ট</h3>
+                <p>সহানুভূতিশীল সমাজ গঠনে একে অপরের পাশে থাকা।</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section id="missions">
+        <h2>আমাদের মিশন</h2>
+        <div class="mission-grid">
+            <div class="mission-card">
+                <h4>মানসিক সচেতনতা বৃদ্ধি</h4>
+                <p>গ্রামীণ পর্যায়ে মানসিক স্বাস্থ্যের গুরুত্ব ছড়িয়ে দেওয়া।</p>
+            </div>
+            <div class="mission-card">
+                <h4>সহায়ক কমিউনিটি গঠন</h4>
+                <p>সমাজে একে অপরের প্রতি সহমর্মিতা ও সহায়তা বৃদ্ধি।</p>
+            </div>
+            <div class="mission-card">
+                <h4>প্রযুক্তির মাধ্যমে সহায়তা</h4>
+                <p>সবার জন্য সহজলভ্য মানসিক স্বাস্থ্য সেবা প্রদান।</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2>আমাদের সম্পর্কে</h2>
+        <p>“মনবন্ধু” একটি ডিজিটাল উদ্যোগ যা বাংলাদেশের গ্রামীণ জনগোষ্ঠীর মানসিক স্বাস্থ্য সচেতনতা ও সহায়তাকে সহজলভ্য করতে তৈরি হয়েছে।</p>
+    </section>
+
     {% endblock %}
 
+    <!-- ===== Footer ===== -->
     <footer>
         <p>© 2024 মনবন্ধু - কমিউনিটি হেলথ নেভিগেটর ফর রুরাল বাংলাদেশ</p>
         <p>বাংলাদেশের গ্রামীণ সম্প্রদায়ের জন্য মানসিক স্বাস্থ্য সহায়তা</p>
     </footer>
 
+    <!-- ===== Smooth Scroll Script ===== -->
     <script>
-        // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const targetId = this.getAttribute('href');
+                if (targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
             });
         });
     </script>
