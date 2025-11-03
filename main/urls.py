@@ -10,4 +10,6 @@ urlpatterns = [
     path("maternal-tracker/", views.maternal_tracker, name="maternal_tracker"),
     path("symptom-guide/", views.symptom_guide, name="symptom_guide"),
     path("health-events/", views.health_events, name="health_events"),
+    path("worker-directory/", views.worker_directory, name="worker_directory"),
+    path("data-export/", views.data_export, name="data_export"),
 ]

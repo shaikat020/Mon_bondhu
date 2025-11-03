@@ -116,3 +116,30 @@ class HealthEvent(models.Model):
 
     class Meta:
         ordering = ["date", "start_time"]
+
+
+class HealthWorker(models.Model):
+    SKILL_CHOICES = [
+        ("mental_health", "মানসিক স্বাস্থ্য"),
+        ("first_aid", "প্রাথমিক চিকিৎসা"),
+        ("maternal_health", "মাতৃস্বাস্থ্য"),
+        ("child_health", "শিশু স্বাস্থ্য"),
+        ("chronic_disease", "দীর্ঘমেয়াদী রোগ (ডায়াবেটিস/বিপি)"),
+        ("vaccination", "টিকাদান"),
+        ("health_education", "স্বাস্থ্য শিক্ষা"),
+    ]
+
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    whatsapp_available = models.BooleanField(default=False)
+    village = models.CharField(max_length=100)
+    union = models.CharField(max_length=100)
+    upazila = models.CharField(max_length=100)
+    skills = models.CharField(max_length=200)  # Comma-separated skills
+    training_organization = models.CharField(max_length=200)
+    available_hours = models.CharField(max_length=100)
+    is_verified = models.BooleanField(default=False)
+    languages = models.CharField(max_length=100, default="বাংলা")
+
+    def __str__(self):
+        return self.name

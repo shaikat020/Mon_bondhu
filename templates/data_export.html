@@ -1,0 +1,426 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">📊 স্বাস্থ্য ডেটা এক্সপোর্ট</h2>
+        <p style="color: #718096; margin-bottom: 2rem;">এনজিও ও স্বাস্থ্য বিভাগের জন্য গোপনীয়তা রক্ষা করে সামগ্রিক ডেটা এক্সপোর্ট</p>
+        
+        <!-- Privacy Notice -->
+        <div style="background: #e6fffa; border: 1px solid #b2f5ea; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+            <h4 style="color: #234e52; margin-bottom: 0.5rem;">🔒 গোপনীয়তা নিশ্চিত</h4>
+            <p style="color: #234e52; margin: 0;">
+                <strong>কোন ব্যক্তিগত তথ্য শেয়ার করা হয় না।</strong> শুধুমাত্র সামগ্রিক পরিসংখ্যান (Aggregated Data) 
+                এক্সপোর্ট করা হয় যা থেকে কোন ব্যক্তিকে চিহ্নিত করা সম্ভব নয়।
+            </p>
+        </div>
+
+        <!-- Data Overview -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <div style="font-size: 2rem;" id="totalCheckins">০</div>
+                <div>মোট মুড চেক-ইন</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <div style="font-size: 2rem;" id="helpRequests">০</div>
+                <div>সাহায্য অনুরোধ</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <div style="font-size: 2rem;" id="activeUsers">০</div>
+                <div>সক্রিয় ব্যবহারকারী</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <div style="font-size: 2rem;" id="topContent">০</div>
+                <div>সর্বাধিক দেখা কন্টেন্ট</div>
+            </div>
+        </div>
+
+        <!-- Export Options -->
+        <div style="background: #f7fafc; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+            <h3 style="color: #4a5568; margin-bottom: 1rem;">📤 ডেটা এক্সপোর্ট করুন</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📊</div>
+                    <h4 style="color: #2d3748; margin-bottom: 0.5rem;">সামগ্রিক পরিসংখ্যান</h4>
+                    <p style="color: #718096; margin-bottom: 1rem;">মোট ব্যবহার, চেক-ইন, এবং engagement ডেটা</p>
+                    <button class="btn" style="background: #667eea; color: white; width: 100%;" 
+                            onclick="exportData('overview')">
+                        JSON এক্সপোর্ট
+                    </button>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">🗺️</div>
+                    <h4 style="color: #2d3748; margin-bottom: 0.5rem;">এলাকা ভিত্তিক ডেটা</h4>
+                    <p style="color: #718096; margin-bottom: 1rem;">ইউনিয়ন ও উপজেলা ভিত্তিক সাহায্য অনুরোধ</p>
+                    <button class="btn" style="background: #ed8936; color: white; width: 100%;" 
+                            onclick="exportData('regional')">
+                        CSV এক্সপোর্ট
+                    </button>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📈</div>
+                    <h4 style="color: #2d3748; margin-bottom: 0.5rem;">ট্রেন্ড বিশ্লেষণ</h4>
+                    <p style="color: #718096; margin-bottom: 1rem;">সময়ের সাথে usage patterns এবং trends</p>
+                    <button class="btn" style="background: #38a169; color: white; width: 100%;" 
+                            onclick="exportData('trends')">
+                        এক্সেল এক্সপোর্ট
+                    </button>
+                </div>
+            </div>
+
+            <!-- Date Range Selector -->
+            <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+                <h4 style="color: #4a5568; margin-bottom: 1rem;">📅 তারিখ range নির্বাচন করুন</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end;">
+                    <div>
+                        <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                            শুরু তারিখ
+                        </label>
+                        <input type="date" id="startDate" 
+                               style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <div>
+                        <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                            শেষ তারিখ
+                        </label>
+                        <input type="date" id="endDate" 
+                               style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <button class="btn" style="background: #4a5568; color: white; white-space: nowrap;" 
+                            onclick="applyDateRange()">
+                        প্রয়োগ করুন
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Preview -->
+        <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+            <h3 style="color: #4a5568; margin-bottom: 1rem;">👁️ ডেটা প্রিভিউ</h3>
+            <div style="background: #f7fafc; padding: 1.5rem; border-radius: 8px; overflow-x: auto;">
+                <pre id="dataPreview" style="margin: 0; font-family: 'Courier New', monospace; font-size: 0.9rem; color: #4a5568;">
+এক্সপোর্ট করার জন্য উপরের বাটন ক্লিক করুন...
+                </pre>
+            </div>
+        </div>
+
+        <!-- Usage Guidelines -->
+        <div style="background: #fffaf0; border: 1px solid #feebc8; padding: 1.5rem; border-radius: 10px;">
+            <h4 style="color: #744210; margin-bottom: 1rem;">📋 ডেটা ব্যবহার গাইডলাইন</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                <div>
+                    <h5 style="color: #744210; margin-bottom: 0.5rem;">✅ অনুমোদিত ব্যবহার</h5>
+                    <ul style="color: #744210; padding-left: 1rem; margin: 0; font-size: 0.9rem;">
+                        <li>সেবা উন্নয়ন ও পরিকল্পনা</li>
+                        <li>তহবিল সংগ্রহের জন্য রিপোর্ট</li>
+                        <li>স্বাস্থ্য কর্মসূচী মূল্যায়ন</li>
+                        <li>গবেষণা ও বিশ্লেষণ</li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 style="color: #744210; margin-bottom: 0.5rem;">❌ নিষিদ্ধ ব্যবহার</h5>
+                    <ul style="color: #744210; padding-left: 1rem; margin: 0; font-size: 0.9rem;">
+                        <li>ব্যক্তিগত তথ্য শনাক্তকরণ</li>
+                        <li>বাণিজ্যিক উদ্দেশ্যে ব্যবহার</li>
+                        <li>বিমা ক্লেম বা legal proceedings</li>
+                        <li>ব্যবহারকারীদের টার্গেটেড marketing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.export-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s;
+    margin: 0.5rem;
+}
+
+.export-btn:hover {
+    background: #5a67d8;
+    transform: translateY(-2px);
+}
+
+.data-card {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.data-card h4 {
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+</style>
+
+<script>
+// Sample aggregated data
+const sampleData = {
+    overview: {
+        total_checkins: 1247,
+        help_requests: 89,
+        active_users: 342,
+        top_content: "ডেঙ্গু প্রতিরোধ",
+        mood_distribution: {
+            happy: 45,
+            neutral: 30,
+            sad: 15,
+            anxious: 8,
+            angry: 2
+        },
+        help_request_types: {
+            mental_health: 45,
+            physical_health: 28,
+            emergency: 12,
+            other: 4
+        },
+        regional_engagement: {
+            "চর কলাপাড়া": 567,
+            "চরফ্যাশন সদর": 432,
+            "নছরতপুর": 248
+        }
+    },
+    regional: {
+        upazila_data: [
+            {
+                upazila: "চরফ্যাশন",
+                union: "চর কলাপাড়া",
+                total_requests: 45,
+                mental_health_requests: 28,
+                physical_health_requests: 12,
+                emergency_requests: 5,
+                avg_response_time_hours: 24
+            },
+            {
+                upazila: "চরফ্যাশন",
+                union: "চরফ্যাশন সদর",
+                total_requests: 32,
+                mental_health_requests: 15,
+                physical_health_requests: 14,
+                emergency_requests: 3,
+                avg_response_time_hours: 18
+            },
+            {
+                upazila: "চরফ্যাশন",
+                union: "নছরতপুর",
+                total_requests: 12,
+                mental_health_requests: 8,
+                physical_health_requests: 3,
+                emergency_requests: 1,
+                avg_response_time_hours: 36
+            }
+        ]
+    },
+    trends: {
+        monthly_usage: [
+            { month: "জানুয়ারি", checkins: 156, requests: 8 },
+            { month: "ফেব্রুয়ারি", checkins: 189, requests: 12 },
+            { month: "মার্চ", checkins: 234, requests: 15 },
+            { month: "এপ্রিল", checkins: 278, requests: 18 },
+            { month: "মে", checkins: 245, requests: 22 },
+            { month: "জুন", checkins: 267, requests: 14 }
+        ],
+        seasonal_trends: {
+            monsoon: { dengue_awareness: 89, mental_health: 45 },
+            winter: { flu_awareness: 67, mental_health: 38 },
+            summer: { heat_stroke: 34, dehydration: 56 }
+        },
+        feature_popularity: {
+            mood_tracker: 1247,
+            health_map: 892,
+            help_request: 89,
+            health_tips: 567,
+            maternal_tracker: 234,
+            symptom_guide: 178
+        }
+    }
+};
+
+function updateStats() {
+    document.getElementById('totalCheckins').textContent = sampleData.overview.total_checkins.toLocaleString();
+    document.getElementById('helpRequests').textContent = sampleData.overview.help_requests.toLocaleString();
+    document.getElementById('activeUsers').textContent = sampleData.overview.active_users.toLocaleString();
+    document.getElementById('topContent').textContent = sampleData.overview.top_content;
+}
+
+function exportData(type) {
+    let exportData;
+    let filename;
+    let contentType;
+    
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    
+    // Apply date filtering if dates are selected
+    let filteredData = sampleData[type];
+    if (startDate && endDate) {
+        filteredData = filterDataByDate(sampleData[type], startDate, endDate);
+    }
+    
+    switch(type) {
+        case 'overview':
+            exportData = JSON.stringify(filteredData, null, 2);
+            filename = `monbondhu_overview_${getCurrentDate()}.json`;
+            contentType = 'application/json';
+            break;
+            
+        case 'regional':
+            exportData = convertToCSV(filteredData.upazila_data);
+            filename = `monbondhu_regional_${getCurrentDate()}.csv`;
+            contentType = 'text/csv';
+            break;
+            
+        case 'trends':
+            exportData = convertToExcelFormat(filteredData);
+            filename = `monbondhu_trends_${getCurrentDate()}.json`;
+            contentType = 'application/json';
+            break;
+    }
+    
+    // Show preview
+    document.getElementById('dataPreview').textContent = exportData;
+    
+    // Create download
+    const blob = new Blob([exportData], { type: contentType });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    
+    // Show success message
+    showMessage(`ডেটা সফলভাবে এক্সপোর্ট হয়েছে: ${filename}`, 'success');
+}
+
+function filterDataByDate(data, startDate, endDate) {
+    // In a real app, this would filter actual date-based data
+    // For demo, we'll just return the data with a filter note
+    return {
+        ...data,
+        date_range: {
+            start: startDate,
+            end: endDate,
+            note: "ডেটা নির্বাচিত তারিখ range অনুযায়ী ফিল্টার করা হয়েছে"
+        }
+    };
+}
+
+function convertToCSV(data) {
+    if (!data || data.length === 0) return '';
+    
+    const headers = Object.keys(data[0]);
+    const csvRows = [];
+    
+    // Add headers
+    csvRows.push(headers.join(','));
+    
+    // Add data rows
+    for (const row of data) {
+        const values = headers.map(header => {
+            const value = row[header];
+            return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+        });
+        csvRows.push(values.join(','));
+    }
+    
+    return csvRows.join('\n');
+}
+
+function convertToExcelFormat(data) {
+    // For demo purposes, we'll return JSON that can be imported to Excel
+    return JSON.stringify(data, null, 2);
+}
+
+function getCurrentDate() {
+    return new Date().toISOString().split('T')[0];
+}
+
+function applyDateRange() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    
+    if (startDate && endDate) {
+        showMessage(`ডেটা ${startDate} থেকে ${endDate} পর্যন্ত ফিল্টার করা হয়েছে`, 'info');
+    } else {
+        showMessage('দয়া করে শুরু এবং শেষ তারিখ উভয়ই নির্বাচন করুন', 'warning');
+    }
+}
+
+function showMessage(message, type) {
+    // Create message element
+    const messageEl = document.createElement('div');
+    messageEl.textContent = message;
+    messageEl.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+    `;
+    
+    if (type === 'success') {
+        messageEl.style.background = '#38a169';
+    } else if (type === 'warning') {
+        messageEl.style.background = '#ed8936';
+    } else {
+        messageEl.style.background = '#667eea';
+    }
+    
+    document.body.appendChild(messageEl);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        messageEl.remove();
+    }, 3000);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    updateStats();
+    
+    // Set default date range to last 30 days
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30);
+    
+    document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+    document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
+});
+
+// Add some CSS for the message animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

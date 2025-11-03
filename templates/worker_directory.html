@@ -1,0 +1,500 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">👨‍⚕️ স্বাস্থ্যকর্মী ডিরেক্টরি</h2>
+        <p style="color: #718096; margin-bottom: 2rem;">আপনার এলাকার প্রশিক্ষিত স্বাস্থ্যকর্মী ও কমিউনিটি স্বাস্থ্য সহায়কদের খুঁজুন</p>
+        
+        <!-- Search and Filters -->
+        <div style="background: #f7fafc; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+            <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 1rem; margin-bottom: 1rem;">
+                <input type="text" id="searchWorkers" placeholder="নাম, গ্রাম বা ইউনিয়ন খুঁজুন..." 
+                       style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
+                <select id="skillFilter" style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
+                    <option value="all">সব দক্ষতা</option>
+                    <option value="mental_health">মানসিক স্বাস্থ্য</option>
+                    <option value="first_aid">প্রাথমিক চিকিৎসা</option>
+                    <option value="maternal_health">মাতৃস্বাস্থ্য</option>
+                    <option value="child_health">শিশু স্বাস্থ্য</option>
+                    <option value="chronic_disease">দীর্ঘমেয়াদী রোগ</option>
+                </select>
+                <select id="areaFilter" style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
+                    <option value="all">সব এলাকা</option>
+                    <option value="চর কলাপাড়া">চর কলাপাড়া</option>
+                    <option value="চরফ্যাশন সদর">চরফ্যাশন সদর</option>
+                    <option value="নছরতপুর">নছরতপুর</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="filter-btn active" onclick="filterWorkers('all')">সব কর্মী</button>
+                <button class="filter-btn" onclick="filterWorkers('verified')">যাচাইকৃত</button>
+                <button class="filter-btn" onclick="filterWorkers('available')">এখনই উপলব্ধ</button>
+                <button class="filter-btn" onclick="filterWorkers('whatsapp')">হোয়াটসঅ্যাপ</button>
+            </div>
+        </div>
+
+        <!-- Workers List -->
+        <div id="workersList">
+            <!-- Workers will be loaded here -->
+        </div>
+
+        <!-- No Workers Message -->
+        <div id="noWorkers" style="display: none; text-align: center; padding: 3rem; color: #718096;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+            <h3>কোন স্বাস্থ্যকর্মী পাওয়া যায়নি</h3>
+            <p>আপনার সার্চ criteria সাথে মিলছে না। অন্য এলাকা বা দক্ষতা দিয়ে চেষ্টা করুন।</p>
+        </div>
+    </div>
+
+    <!-- Important Information -->
+    <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 10px; margin: 2rem 0;">
+        <h4 style="color: #856404; margin-bottom: 1rem;">💡 গুরুত্বপূর্ণ তথ্য</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+            <div>
+                <h5 style="color: #856404; margin-bottom: 0.5rem;">✅ যাচাইকরণ</h5>
+                <p style="color: #856404; margin: 0; font-size: 0.9rem;">
+                    <strong>যাচাইকৃত</strong> ব্যাজ থাকা স্বাস্থ্যকর্মীরা সরকারি বা স্বীকৃত এনজিও দ্বারা প্রশিক্ষিত।
+                </p>
+            </div>
+            <div>
+                <h5 style="color: #856404; margin-bottom: 0.5rem;">🕒 সময় মেনে চলুন</h5>
+                <p style="color: #856404; margin: 0; font-size: 0.9rem;">
+                    স্বাস্থ্যকর্মীদের দেওয়া সময়সূচী মেনে চলুন। জরুরী না হলে রাতের বেলা ফোন করবেন না।
+                </p>
+            </div>
+            <div>
+                <h5 style="color: #856404; margin-bottom: 0.5rem;">📞 যোগাযোগ শিষ্টাচার</h5>
+                <p style="color: #856404; margin: 0; font-size: 0.9rem;">
+                    প্রথমে সালাম দিন, নিজের পরিচয় দিন, তারপর সমস্যার কথা বলুন। ধন্যবাদ দিয়ে কথা শেষ করুন।
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Worker Form (For demonstration) -->
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h3 style="color: #4a5568; margin-bottom: 1rem;">স্বাস্থ্যকর্মী যোগ করুন</h3>
+        <p style="color: #718096; margin-bottom: 2rem;">নতুন স্বাস্থ্যকর্মীর তথ্য যোগ করুন (ডেমো উদ্দেশ্যে)</p>
+        
+        <form id="addWorkerForm" style="display: grid; gap: 1rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        নাম *
+                    </label>
+                    <input type="text" name="name" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        ফোন নম্বর *
+                    </label>
+                    <input type="tel" name="phone" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        গ্রাম *
+                    </label>
+                    <input type="text" name="village" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        ইউনিয়ন *
+                    </label>
+                    <input type="text" name="union" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        উপজেলা *
+                    </label>
+                    <input type="text" name="upazila" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+            </div>
+            
+            <div>
+                <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                    দক্ষতা সমূহ *
+                </label>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" name="skills" value="mental_health">
+                        <span>মানসিক স্বাস্থ্য</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" name="skills" value="first_aid">
+                        <span>প্রাথমিক চিকিৎসা</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" name="skills" value="maternal_health">
+                        <span>মাতৃস্বাস্থ্য</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" name="skills" value="child_health">
+                        <span>শিশু স্বাস্থ্য</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" name="skills" value="chronic_disease">
+                        <span>দীর্ঘমেয়াদী রোগ</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        প্রশিক্ষণ প্রতিষ্ঠান *
+                    </label>
+                    <input type="text" name="training_organization" required 
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+                <div>
+                    <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                        উপলব্ধ সময় *
+                    </label>
+                    <input type="text" name="available_hours" required placeholder="সকাল ৮টা - সন্ধ্যা ৬টা"
+                           style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 2rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" name="whatsapp_available">
+                    <span>হোয়াটসঅ্যাপ উপলব্ধ</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" name="is_verified">
+                    <span>যাচাইকৃত</span>
+                </label>
+            </div>
+            
+            <button type="submit" class="btn" style="background: #667eea; color: white;">
+                স্বাস্থ্যকর্মী যোগ করুন
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid #e2e8f0;
+    background: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.worker-card {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s;
+}
+
+.worker-card:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.worker-card.verified {
+    border-left: 4px solid #38a169;
+    background: #f0fff4;
+}
+
+.skill-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: #e2e8f0;
+    color: #4a5568;
+}
+
+.skill-mental_health { background: #e9d8fd; color: #553c9a; }
+.skill-first_aid { background: #fed7d7; color: #c53030; }
+.skill-maternal_health { background: #fed7e2; color: #b83280; }
+.skill-child_health { background: #c6f6d5; color: #276749; }
+.skill-chronic_disease { background: #fefcbf; color: #744210; }
+.skill-vaccination { background: #bee3f8; color: #2c5282; }
+.skill-health_education { background: #e6fffa; color: #234e52; }
+
+.verified-badge {
+    background: #38a169;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 1rem;
+}
+
+.available-badge {
+    background: #ed8936;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+}
+</style>
+
+<script>
+// Sample workers data
+let workersData = [
+    {
+        id: 1,
+        name: "মোঃ করিম উদ্দিন",
+        phone: "০১৭১১-২২৩৩৪৪",
+        whatsapp_available: true,
+        village: "চর কলাপাড়া",
+        union: "চর কলাপাড়া",
+        upazila: "চরফ্যাশন",
+        skills: ["mental_health", "first_aid", "chronic_disease"],
+        training_organization: "ব্র্যাক স্বাস্থ্য কর্মসূচী",
+        available_hours: "সকাল ৮টা - সন্ধ্যা ৬টা",
+        is_verified: true,
+        languages: "বাংলা"
+    },
+    {
+        id: 2,
+        name: "আয়েশা বেগম",
+        phone: "০১৮১২-৩৪৫৬৭৮",
+        whatsapp_available: false,
+        village: "নছরতপুর",
+        union: "নছরতপুর",
+        upazila: "চরফ্যাশন",
+        skills: ["maternal_health", "child_health", "vaccination"],
+        training_organization: "স্বাস্থ্য বিভাগ",
+        available_hours: "সকাল ৯টা - বিকেল ৪টা",
+        is_verified: true,
+        languages: "বাংলা"
+    },
+    {
+        id: 3,
+        name: "রফিকুল ইসলাম",
+        phone: "০১৯১৫-৫৫৬৬৭৭",
+        whatsapp_available: true,
+        village: "চরফ্যাশন সদর",
+        union: "চরফ্যাশন সদর",
+        upazila: "চরফ্যাশন",
+        skills: ["first_aid", "health_education"],
+        training_organization: "স্থানীয় যুব সংঘ",
+        available_hours: "বিকেল ৪টা - রাত ৮টা",
+        is_verified: false,
+        languages: "বাংলা"
+    }
+];
+
+function displayWorkers(workers = workersData) {
+    const container = document.getElementById('workersList');
+    const noWorkers = document.getElementById('noWorkers');
+    
+    if (workers.length === 0) {
+        container.style.display = 'none';
+        noWorkers.style.display = 'block';
+        return;
+    }
+    
+    container.style.display = 'block';
+    noWorkers.style.display = 'none';
+    
+    const now = new Date();
+    const currentHour = now.getHours();
+    
+    container.innerHTML = workers.map(worker => {
+        const isVerified = worker.is_verified;
+        const isAvailable = checkAvailability(worker.available_hours, currentHour);
+        const cardClass = isVerified ? 'worker-card verified' : 'worker-card';
+        
+        const skillNames = {
+            'mental_health': 'মানসিক স্বাস্থ্য',
+            'first_aid': 'প্রাথমিক চিকিৎসা',
+            'maternal_health': 'মাতৃস্বাস্থ্য',
+            'child_health': 'শিশু স্বাস্থ্য',
+            'chronic_disease': 'দীর্ঘমেয়াদী রোগ',
+            'vaccination': 'টিকাদান',
+            'health_education': 'স্বাস্থ্য শিক্ষা'
+        };
+        
+        return `
+            <div class="${cardClass}">
+                <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <h3 style="color: #2d3748; margin: 0;">${worker.name}</h3>
+                            ${isVerified ? '<span class="verified-badge">✅ যাচাইকৃত</span>' : ''}
+                            ${isAvailable ? '<span class="available-badge">এখনই উপলব্ধ</span>' : ''}
+                        </div>
+                        <div style="color: #718096; margin-bottom: 1rem;">
+                            <div>📞 ${worker.phone} ${worker.whatsapp_available ? '• 📱 হোয়াটসঅ্যাপ' : ''}</div>
+                            <div>📍 ${worker.village}, ${worker.union}, ${worker.upazila}</div>
+                            <div>🕒 ${worker.available_hours}</div>
+                            <div>🏫 ${worker.training_organization} দ্বারা প্রশিক্ষিত</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <strong style="color: #4a5568; display: block; margin-bottom: 0.5rem;">দক্ষতা:</strong>
+                    <div>
+                        ${worker.skills.map(skill => `
+                            <span class="skill-badge skill-${skill}">${skillNames[skill]}</span>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <a href="tel:${worker.phone}" class="btn" style="background: #38a169; color: white; text-decoration: none;">
+                        📞 কল করুন
+                    </a>
+                    ${worker.whatsapp_available ? `
+                        <a href="https://wa.me/${worker.phone.replace(/\D/g, '')}" 
+                           target="_blank" class="btn" style="background: #25D366; color: white; text-decoration: none;">
+                            💬 হোয়াটসঅ্যাপ
+                        </a>
+                    ` : ''}
+                    <button class="btn" style="background: #667eea; color: white;" 
+                            onclick="saveContact('${worker.name}', '${worker.phone}')">
+                        📱 সেভ করুন
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function checkAvailability(hoursString, currentHour) {
+    // Simple availability check based on common time patterns
+    if (hoursString.includes('সকাল') && hoursString.includes('সন্ধ্যা')) {
+        return currentHour >= 8 && currentHour <= 18;
+    }
+    if (hoursString.includes('বিকেল') && hoursString.includes('রাত')) {
+        return currentHour >= 16 && currentHour <= 20;
+    }
+    return true; // Default to available if we can't parse
+}
+
+function filterWorkers(filterType) {
+    // Update active button
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    let filteredWorkers = workersData;
+    
+    switch (filterType) {
+        case 'verified':
+            filteredWorkers = workersData.filter(worker => worker.is_verified);
+            break;
+        case 'available':
+            const now = new Date();
+            const currentHour = now.getHours();
+            filteredWorkers = workersData.filter(worker => 
+                checkAvailability(worker.available_hours, currentHour)
+            );
+            break;
+        case 'whatsapp':
+            filteredWorkers = workersData.filter(worker => worker.whatsapp_available);
+            break;
+    }
+    
+    // Apply search filter
+    const searchTerm = document.getElementById('searchWorkers').value.toLowerCase();
+    if (searchTerm) {
+        filteredWorkers = filteredWorkers.filter(worker => 
+            worker.name.toLowerCase().includes(searchTerm) ||
+            worker.village.toLowerCase().includes(searchTerm) ||
+            worker.union.toLowerCase().includes(searchTerm) ||
+            worker.skills.some(skill => skill.toLowerCase().includes(searchTerm))
+        );
+    }
+    
+    // Apply skill filter
+    const skillFilter = document.getElementById('skillFilter').value;
+    if (skillFilter !== 'all') {
+        filteredWorkers = filteredWorkers.filter(worker => 
+            worker.skills.includes(skillFilter)
+        );
+    }
+    
+    // Apply area filter
+    const areaFilter = document.getElementById('areaFilter').value;
+    if (areaFilter !== 'all') {
+        filteredWorkers = filteredWorkers.filter(worker => 
+            worker.village === areaFilter || worker.union === areaFilter
+        );
+    }
+    
+    displayWorkers(filteredWorkers);
+}
+
+function saveContact(name, phone) {
+    // In a real app, this would save to device contacts
+    alert(`কন্টাক্ট সেভ করা হয়েছে:\n${name}\n${phone}`);
+}
+
+// Add worker form handler
+document.getElementById('addWorkerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const skills = [];
+    this.querySelectorAll('input[name="skills"]:checked').forEach(checkbox => {
+        skills.push(checkbox.value);
+    });
+    
+    const newWorker = {
+        id: workersData.length + 1,
+        name: formData.get('name'),
+        phone: formData.get('phone'),
+        whatsapp_available: formData.get('whatsapp_available') === 'on',
+        village: formData.get('village'),
+        union: formData.get('union'),
+        upazila: formData.get('upazila'),
+        skills: skills,
+        training_organization: formData.get('training_organization'),
+        available_hours: formData.get('available_hours'),
+        is_verified: formData.get('is_verified') === 'on',
+        languages: 'বাংলা'
+    };
+    
+    workersData.push(newWorker);
+    displayWorkers(workersData);
+    this.reset();
+    
+    alert('স্বাস্থ্যকর্মী সফলভাবে যোগ করা হয়েছে!');
+});
+
+// Search and filter event listeners
+document.getElementById('searchWorkers').addEventListener('input', filterWorkers);
+document.getElementById('skillFilter').addEventListener('change', filterWorkers);
+document.getElementById('areaFilter').addEventListener('change', filterWorkers);
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    displayWorkers();
+});
+</script>
+{% endblock %}

@@ -8,8 +8,7 @@
 </section>
 
 <section class="container">
-    <!-- In the features section, update to include links -->
-<!-- Update the features grid to include all missions -->
+<!-- Update the features grid to include ALL missions -->
 <div id="features" class="features">
     <div class="feature-card">
         <div class="feature-icon">😊</div>
@@ -58,6 +57,20 @@
         <h3>কমিউনিটি ইভেন্ট</h3>
         <p>আপনার এলাকার স্বাস্থ্য ক্যাম্প, টিকাদান ও সচেতনতা কর্মসূচী</p>
         <a href="{% url 'health_events' %}" class="btn" style="margin-top: 1rem; display: inline-block;">খুঁজুন</a>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">👨‍⚕️</div>
+        <h3>স্বাস্থ্যকর্মী ডিরেক্টরি</h3>
+        <p>আপনার এলাকার প্রশিক্ষিত স্বাস্থ্যকর্মী ও কমিউনিটি সহায়কদের খুঁজুন</p>
+        <a href="{% url 'worker_directory' %}" class="btn" style="margin-top: 1rem; display: inline-block;">খুঁজুন</a>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>ডেটা এক্সপোর্ট</h3>
+        <p>এনজিওদের জন্য গোপনীয়তা রক্ষা করে সামগ্রিক স্বাস্থ্য ডেটা এক্সপোর্ট</p>
+        <a href="{% url 'data_export' %}" class="btn" style="margin-top: 1rem; display: inline-block;">এক্সপোর্ট করুন</a>
     </div>
 </div>
 </section>

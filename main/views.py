@@ -66,3 +66,11 @@ def symptom_guide(request):
 
 def health_events(request):
     return render(request, "health_events.html")
+
+
+def worker_directory(request):
+    return render(request, "worker_directory.html")
+
+
+def data_export(request):
+    return render(request, "data_export.html")
