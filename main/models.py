@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import timedelta
 
 
 class MoodCheckIn(models.Model):
@@ -143,3 +144,16 @@ class HealthWorker(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class OpenRouterChat(models.Model):
+    """Simple model to persist chat exchanges from the mood tracker chat helper.
+
+    We store a small text blob where each exchange is two lines:
+    User: ...\nAI: ...
+    """
+    messages = models.TextField()  # Stores the conversation history (simple two-line format)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Chat {self.id}"
