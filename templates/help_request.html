@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">গোপন সাহায্য অনুরোধ</h2>
+        <p style="color: #718096; margin-bottom: 2rem;">আপনার পরিচয় গোপন রেখে সাহায্য চান। আপনার কোন ব্যক্তিগত তথ্য সংগ্রহ করা হবে না।</p>
+        
+        <div style="background: #e6fffa; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; border-left: 4px solid #38b2ac;">
+            <h4 style="color: #234e52; margin-bottom: 0.5rem;">🔒 আপনার গোপনীয়তা সুরক্ষিত</h4>
+            <p style="color: #234e52; margin: 0;">
+                • কোন ব্যক্তিগত তথ্য সংগ্রহ করা হয় না<br>
+                • আপনার নাম, ফোন নম্বর বা ঠিকানা জিজ্ঞাসা করা হয় না<br>
+                • অনুরোধটি শুধুমাত্র প্রশিক্ষিত স্বাস্থ্যকর্মীরা দেখতে পান
+            </p>
+        </div>
+
+        <form id="helpForm" method="POST">
+            {% csrf_token %}
+            
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                    আমি কোন ধরনের সাহায্য চাই: *
+                </label>
+                <select name="help_type" required style="width: 100%; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem;">
+                    <option value="">সাহায্যের ধরন নির্বাচন করুন</option>
+                    <option value="mental_health">মানসিক স্বাস্থ্য সহায়তা (চিন্তা, দুশ্চিন্তা, বিষণ্ণতা)</option>
+                    <option value="physical_health">শারীরিক স্বাস্থ্য সমস্যা</option>
+                    <option value="emergency">জরুরী সাহায্য প্রয়োজন</option>
+                    <option value="family">পারিবারিক সমস্যা</option>
+                    <option value="other">অন্যান্য</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                    বিস্তারিত বর্ণনা করুন: *
+                </label>
+                <textarea name="description" required 
+                          placeholder="আপনার সমস্যা বা কী ধরনের সাহায্য প্রয়োজন তা বিস্তারিত লিখুন..." 
+                          style="width: 100%; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; min-height: 150px; resize: vertical;"></textarea>
+            </div>
+            
+            <div style="margin-bottom: 2rem;">
+                <label style="display: block; color: #4a5568; margin-bottom: 0.5rem; font-weight: bold;">
+                    যোগাযোগের পদ্ধতি (ঐচ্ছিক):
+                </label>
+                <input type="text" name="contact_preference" 
+                       placeholder="যেমন: ফোন কল, হোয়াটসঅ্যাপ, ব্যক্তিগত দেখা ইত্যাদি" 
+                       style="width: 100%; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
+            </div>
+
+            <!-- Consent Section -->
+            <div style="background: #fff3cd; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+                <label style="display: flex; align-items: start; gap: 1rem; cursor: pointer;">
+                    <input type="checkbox" required style="margin-top: 0.25rem;">
+                    <span style="color: #856404;">
+                        আমি বুঝতে পারছি যে এটি একটি গোপন সাহায্য অনুরোধ। আমার অনুরোধটি স্থানীয় একজন প্রশিক্ষিত স্বাস্থ্যকর্মী দেখবেন এবং প্রয়োজনীয় সাহায্য প্রদান করবেন। আমি আমার কোন ব্যক্তিগত তথ্য প্রদান করছি না এবং আমার গোপনীয়তা সম্পূর্ণভাবে সুরক্ষিত থাকবে।
+                    </span>
+                </label>
+            </div>
+            
+            <button type="submit" class="btn" style="background: #667eea; color: white; width: 100%; padding: 1rem; font-size: 1.1rem;">
+                সাহায্য অনুরোধ পাঠান
+            </button>
+        </form>
+        
+        <div id="responseMessage" style="display: none; padding: 1.5rem; border-radius: 10px; margin-top: 1rem; text-align: center;"></div>
+    </div>
+
+    <!-- What Happens Next -->
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <h3 style="color: #4a5568; margin-bottom: 1rem;">এরপর কী হবে?</h3>
+        <div style="display: grid; gap: 1.5rem;">
+            <div style="display: flex; gap: 1rem; align-items: start;">
+                <div style="background: #667eea; color: white; width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+                <div>
+                    <h4 style="color: #2d3748; margin-bottom: 0.5rem;">অনুরোধ প্রাপ্তি</h4>
+                    <p style="color: #718096; margin: 0;">আপনার অনুরোধটি আমাদের সিস্টেমে সংরক্ষিত হবে</p>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; align-items: start;">
+                <div style="background: #667eea; color: white; width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+                <div>
+                    <h4 style="color: #2d3748; margin-bottom: 0.5rem;">স্বাস্থ্যকর্মীর কাছে প্রেরণ</h4>
+                    <p style="color: #718096; margin: 0;">একজন প্রশিক্ষিত স্বাস্থ্যকর্মী আপনার অনুরোধটি দেখবেন</p>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; align-items: start;">
+                <div style="background: #667eea; color: white; width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+                <div>
+                    <h4 style="color: #2d3748; margin-bottom: 0.5rem;">যোগাযোগ</h4>
+                    <p style="color: #718096; margin: 0;">স্বাস্থ্যকর্মী আপনার পছন্দের পদ্ধতিতে যোগাযোগ করবেন</p>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; align-items: start;">
+                <div style="background: #667eea; color: white; width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
+                <div>
+                    <h4 style="color: #2d3748; margin-bottom: 0.5rem;">সাহায্য প্রদান</h4>
+                    <p style="color: #718096; margin: 0;">প্রয়োজনীয় পরামর্শ ও সাহায্য প্রদান করা হবে</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const helpForm = document.getElementById('helpForm');
+    const responseMessage = document.getElementById('responseMessage');
+    
+    helpForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (!this.checkValidity()) {
+            this.reportValidity();
+            return;
+        }
+        
+        const formData = new FormData(this);
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'পাঠানো হচ্ছে...';
+        submitBtn.disabled = true;
+        
+        fetch('', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                responseMessage.textContent = '✅ আপনার সাহায্য অনুরোধ সফলভাবে পাঠানো হয়েছে! একজন প্রশিক্ষিত স্বাস্থ্যকর্মী শীঘ্রই আপনার সাথে যোগাযোগ করবেন।';
+                responseMessage.style.background = '#c6f6d5';
+                responseMessage.style.color = '#276749';
+                responseMessage.style.display = 'block';
+                helpForm.reset();
+                
+                // Scroll to message
+                responseMessage.scrollIntoView({ behavior: 'smooth' });
+            }
+        })
+        .catch(error => {
+            responseMessage.textContent = '❌ একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
+            responseMessage.style.background = '#fed7d7';
+            responseMessage.style.color = '#c53030';
+            responseMessage.style.display = 'block';
+        })
+        .finally(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        });
+    });
+});
+</script>
+{% endblock %}

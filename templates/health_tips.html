@@ -1,0 +1,339 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">মৌসুমী স্বাস্থ্য টিপস</h2>
+        <p style="color: #718096; margin-bottom: 2rem;">বছরের বিভিন্ন সময়ে সাধারণ স্বাস্থ্য সমস্যা ও প্রতিরোধের উপায়</p>
+        
+        <!-- Season Selector -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
+            <button class="season-btn active" data-season="current" onclick="showSeason('current')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📅</div>
+                <div>বর্তমান মৌসুম</div>
+            </button>
+            <button class="season-btn" data-season="monsoon" onclick="showSeason('monsoon')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌧️</div>
+                <div>বর্ষা মৌসুম<br><small>(জুন-সেপ্টেম্বর)</small></div>
+            </button>
+            <button class="season-btn" data-season="winter" onclick="showSeason('winter')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">❄️</div>
+                <div>শীত মৌসুম<br><small>(ডিসেম্বর-ফেব্রুয়ারি)</small></div>
+            </button>
+            <button class="season-btn" data-season="summer" onclick="showSeason('summer')">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">☀️</div>
+                <div>গ্রীষ্ম মৌসুম<br><small>(মার্চ-মে)</small></div>
+            </button>
+        </div>
+
+        <!-- Current Season Tips (Default) -->
+        <div id="current-season" class="season-content active">
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem;">বর্তমান মৌসুমের স্বাস্থ্য সতর্কতা</h3>
+                <p id="current-season-text" style="margin: 0; opacity: 0.9;"></p>
+            </div>
+            
+            <div style="display: grid; gap: 1.5rem;">
+                <div class="tip-card">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <div style="background: #fed7d7; color: #c53030; padding: 0.5rem; border-radius: 8px; flex-shrink: 0;">⚠️</div>
+                        <div>
+                            <h4 style="color: #2d3748; margin-bottom: 0.5rem;">জরুরী সতর্কতা</h4>
+                            <p style="color: #718096; margin: 0;" id="current-warning"></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <div style="background: #c6f6d5; color: #276749; padding: 0.5rem; border-radius: 8px; flex-shrink: 0;">💡</div>
+                        <div>
+                            <h4 style="color: #2d3748; margin-bottom: 0.5rem;">প্রতিরোধের উপায়</h4>
+                            <ul style="color: #718096; padding-left: 1rem;" id="current-prevention"></ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <div style="background: #bee3f8; color: #2c5282; padding: 0.5rem; border-radius: 8px; flex-shrink: 0;">🏥</div>
+                        <div>
+                            <h4 style="color: #2d3748; margin-bottom: 0.5rem;">কখন ডাক্তার দেখাবেন</h4>
+                            <ul style="color: #718096; padding-left: 1rem;" id="current-when-to-see-doctor"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monsoon Season Tips -->
+        <div id="monsoon-season" class="season-content">
+            <div style="background: linear-gradient(135deg, #4fd1c5, #38b2ac); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem;">বর্ষা মৌসুম (জুন-সেপ্টেম্বর)</h3>
+                <p style="margin: 0; opacity: 0.9;">বর্ষায় ডেঙ্গু, ম্যালেরিয়া, এবং পানিবাহিত রোগের প্রাদুর্ভাব বাড়ে</p>
+            </div>
+            
+            <div style="display: grid; gap: 1.5rem;">
+                <div class="tip-card">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <div style="background: #fed7d7; color: #c53030; padding: 0.5rem; border-radius: 8px; flex-shrink: 0;">🦟</div>
+                        <div>
+                            <h4 style="color: #2d3748; margin-bottom: 0.5rem;">ডেঙ্গু প্রতিরোধ</h4>
+                            <ul style="color: #718096; padding-left: 1rem;">
+                                <li>বাড়ির চারপাশে জমে থাকা পানি সরিয়ে ফেলুন</li>
+                                <li>মশারি ব্যবহার করুন</li>
+                                <li>ফুল হাতা জামা পরুন</li>
+                                <li>মশা নিধন স্প্রে ব্যবহার করুন</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <div style="background: #fefcbf; color: #744210; padding: 0.5rem; border-radius: 8px; flex-shrink: 0;">💧</div>
+                        <div>
+                            <h4 style="color: #2d3748; margin-bottom: 0.5rem;">পানিবাহিত রোগ</h4>
+                            <ul style="color: #718096; padding-left: 1rem;">
+                                <li>পানি ফুটিয়ে বা ফিল্টার করে পান করুন</li>
+                                <li>বাইরের খোলা খাবার এড়িয়ে চলুন</li>
+                                <li>হাত ভালোভাবে ধুয়ে নিন</li>
+                                <li>ডায়রিয়া হলে ওআরএস খান</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Winter Season Tips -->
+        <div id="winter-season" class="season-content">
+            <div style="background: linear-gradient(135deg, #90cdf4, #4299e1); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem;">শীত মৌসুম (ডিসেম্বর-ফেব্রুয়ারি)</h3>
+                <p style="margin: 0; opacity: 0.9;">শীতে সর্দি-কাশি, ফ্লু এবং শ্বাসকষ্টের সমস্যা বাড়ে</p>
+            </div>
+            
+            <div style="display: grid; gap: 1.5rem;">
+                <div class="tip-card">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <div style="background: #e9d8fd; color: #553c9a; padding: 0.5rem; border-radius: 8px; flex-shrink: 0;">🤧</div>
+                        <div>
+                            <h4 style="color: #2d3748; margin-bottom: 0.5rem;">সর্দি-কাশি প্রতিরোধ</h4>
+                            <ul style="color: #718096; padding-left: 1rem;">
+                                <li>গরম পানি ও ভাপ নিন</li>
+                                <li>গরম কাপড় পরুন</li>
+                                <li>ভিটামিন সি যুক্ত খাবার খান</li>
+                                <li>পর্যাপ্ত পরিমাণে পানি পান করুন</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <div style="background: #fed7d7; color: #c53030; padding: 0.5rem; border-radius: 8px; flex-shrink: 0;">👶</div>
+                        <div>
+                            <h4 style="color: #2d3748; margin-bottom: 0.5rem;">শিশুর যত্ন</h4>
+                            <ul style="color: #718096; padding-left: 1rem;">
+                                <li>শিশুদের গরম কাপড় পরান</li>
+                                <li>নিউমোনিয়ার লক্ষণ দেখলে立即 ডাক্তার দেখান</li>
+                                <li>শুষ্ক ত্বকের জন্য ময়েশ্চারাইজার ব্যবহার করুন</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summer Season Tips -->
+        <div id="summer-season" class="season-content">
+            <div style="background: linear-gradient(135deg, #fbd38d, #ed8936); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem;">গ্রীষ্ম মৌসুম (মার্চ-মে)</h3>
+                <p style="margin: 0; opacity: 0.9;">গ্রীষ্মে হিট স্ট্রোক, ডিহাইড্রেশন এবং খাদ্য বিষক্রিয়া বেশি হয়</p>
+            </div>
+            
+            <div style="display: grid; gap: 1.5rem;">
+                <div class="tip-card">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <div style="background: #fed7d7; color: #c53030; padding: 0.5rem; border-radius: 8px; flex-shrink: 0;">🌡️</div>
+                        <div>
+                            <h4 style="color: #2d3748; margin-bottom: 0.5rem;">হিট স্ট্রোক প্রতিরোধ</h4>
+                            <ul style="color: #718096; padding-left: 1rem;">
+                                <li>দুপুর ১১টা থেকে ৩টা পর্যন্ত রোদে বের হবেন না</li>
+                                <li>হালকা রঙের সুতি কাপড় পরুন</li>
+                                <li>পর্যাপ্ত পানি ও খাবার স্যালাইন খান</li>
+                                <li>ছাতা বা ক্যাপ ব্যবহার করুন</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tip-card">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <div style="background: #fefcbf; color: #744210; padding: 0.5rem; border-radius: 8px; flex-shrink: 0;">🥤</div>
+                        <div>
+                            <h4 style="color: #2d3748; margin-bottom: 0.5rem;">ডিহাইড্রেশন এড়ান</h4>
+                            <ul style="color: #718096; padding-left: 1rem;">
+                                <li>দিনে কমপক্ষে ৮-১০ গ্লাস পানি পান করুন</li>
+                                <li>তাজা ফলের রস ও ডাবের পানি খান</li>
+                                <li>চা-কফি কম খান</li>
+                                <li>ওআরএস বাড়িতে রাখুন</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.season-btn {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 1.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.season-btn.active,
+.season-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.season-content {
+    display: none;
+}
+
+.season-content.active {
+    display: block;
+}
+
+.tip-card {
+    background: #f7fafc;
+    padding: 1.5rem;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+}
+</style>
+
+<script>
+// Season data
+const seasonData = {
+    current: {
+        name: "বর্তমান মৌসুম",
+        description: "",
+        warning: "",
+        prevention: [],
+        whenToSeeDoctor: []
+    },
+    monsoon: {
+        name: "বর্ষা মৌসুম",
+        description: "জুন থেকে সেপ্টেম্বর মাস পর্যন্ত বর্ষাকাল চলছে। এই সময় ডেঙ্গু, ম্যালেরিয়া এবং পানিবাহিত রোগের প্রাদুর্ভাব বেশি দেখা যায়।"
+    },
+    winter: {
+        name: "শীত মৌসুম", 
+        description: "ডিসেম্বর থেকে ফেব্রুয়ারি মাস পর্যন্ত শীতকাল চলছে। এই সময় সর্দি-কাশি, ফ্লু এবং শ্বাসকষ্টের সমস্যা বাড়ে।"
+    },
+    summer: {
+        name: "গ্রীষ্ম মৌসুম",
+        description: "মার্চ থেকে মে মাস পর্যন্ত গ্রীষ্মকাল চলছে। এই সময় হিট স্ট্রোক, ডিহাইড্রেশন এবং খাদ্য বিষক্রিয়ার ঝুঁকি বেশি।"
+    }
+};
+
+function showSeason(season) {
+    // Update active button
+    document.querySelectorAll('.season-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-season="${season}"]`).classList.add('active');
+    
+    // Show selected season content
+    document.querySelectorAll('.season-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById(`${season}-season`).classList.add('active');
+    
+    // Update current season based on actual month
+    if (season === 'current') {
+        updateCurrentSeason();
+    }
+}
+
+function updateCurrentSeason() {
+    const now = new Date();
+    const month = now.getMonth() + 1; // JavaScript months are 0-indexed
+    let currentSeason, seasonText, warning, prevention, whenToSeeDoctor;
+    
+    if (month >= 6 && month <= 9) {
+        currentSeason = "monsoon";
+        seasonText = "বর্তমানে বর্ষা মৌসুম চলছে। ডেঙ্গু ও পানিবাহিত রোগের প্রতি সতর্ক থাকুন।";
+        warning = "ডেঙ্গু জ্বর: উচ্চ জ্বর, মাথাব্যথা, চোখে ব্যথা, শরীরে র্যাশ";
+        prevention = [
+            "বাড়ির চারপাশে জমে থাকা পানি সরিয়ে ফেলুন",
+            "মশারি ব্যবহার করুন",
+            "ফুল হাতা জামা পরুন",
+            "পানি ফুটিয়ে বা ফিল্টার করে পান করুন"
+        ];
+        whenToSeeDoctor = [
+            "জ্বর ৩ দিনের বেশি থাকলে",
+            "পেটে ব্যথা বা বমি হলে", 
+            "রক্তবমি বা মলের সাথে রক্ত গেলে",
+            "শরীরে লাল দাগ দেখা দিলে"
+        ];
+    } else if (month >= 12 || month <= 2) {
+        currentSeason = "winter";
+        seasonText = "বর্তমানে শীত মৌসুম চলছে। সর্দি-কাশি ও ফ্লুর প্রতি সতর্ক থাকুন।";
+        warning = "নিউমোনিয়া: জ্বর, কাশি, শ্বাসকষ্ট, বুকে ব্যথা";
+        prevention = [
+            "গরম কাপড় পরুন",
+            "গরম পানি ও ভাপ নিন",
+            "ভিটামিন সি যুক্ত খাবার খান",
+            "হাত ভালোভাবে ধুয়ে নিন"
+        ];
+        whenToSeeDoctor = [
+            "শ্বাসকষ্ট বা বুকে ব্যথা হলে",
+            "জ্বর ১০১°F এর以上 থাকলে",
+            "কাশি ১ সপ্তাহের বেশি থাকলে",
+            "শিশুর শ্বাস cepat হলে"
+        ];
+    } else {
+        currentSeason = "summer";
+        seasonText = "বর্তমানে গ্রীষ্ম মৌসুম চলছে। হিট স্ট্রোক ও ডিহাইড্রেশনের প্রতি সতর্ক থাকুন।";
+        warning = "হিট স্ট্রোক: শরীর খুব গরম, মাথাব্যথা, বমি, প্রস্রাব কমে যাওয়া";
+        prevention = [
+            "দুপুরে রোদে বের হবেন না",
+            "পর্যাপ্ত পানি ও স্যালাইন খান",
+            "হালকা রঙের সুতি কাপড় পরুন",
+            "ছাতা বা ক্যাপ ব্যবহার করুন"
+        ];
+        whenToSeeDoctor = [
+            "জ্ঞান হারানো বা confusion হলে",
+            "প্রস্রাব কমে গেলে",
+            "ত্বক শুষ্ক ও লাল হয়ে গেলে",
+            "বমি বা ডায়রিয়া বেশি হলে"
+        ];
+    }
+    
+    // Update DOM
+    document.getElementById('current-season-text').textContent = seasonText;
+    document.getElementById('current-warning').textContent = warning;
+    
+    const preventionList = document.getElementById('current-prevention');
+    preventionList.innerHTML = prevention.map(item => `<li>${item}</li>`).join('');
+    
+    const doctorList = document.getElementById('current-when-to-see-doctor');
+    doctorList.innerHTML = whenToSeeDoctor.map(item => `<li>${item}</li>`).join('');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    updateCurrentSeason();
+});
+</script>
+{% endblock %}

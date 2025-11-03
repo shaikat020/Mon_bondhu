@@ -50,3 +50,7 @@ def help_request(request):
         )
 
     return render(request, "help_request.html")
+
+
+def health_tips(request):
+    return render(request, "health_tips.html")

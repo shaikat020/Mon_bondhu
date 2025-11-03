@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">আপনার নিকটস্থ স্বাস্থ্য সুবিধা খুঁজুন</h2>
+        <p style="color: #718096; margin-bottom: 2rem;">আপনার এলাকার ক্লিনিক, হাসপাতাল, ফার্মেসি এবং কমিউনিটি স্বাস্থ্যকর্মী খুঁজে বের করুন</p>
+        
+        <!-- Search Form -->
+        <div style="background: #f7fafc; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+            <form method="GET" style="display: grid; grid-template-columns: 1fr auto; gap: 1rem;">
+                <input type="text" name="upazila" placeholder="আপনার উপজেলা বা ইউনিয়নের নাম লিখুন..." 
+                       value="{{ request.GET.upazila }}"
+                       style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
+                <button type="submit" class="btn" style="background: #667eea; color: white;">খুঁজুন</button>
+            </form>
+            
+            <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button type="button" onclick="filterFacilities('all')" class="filter-btn active">সব</button>
+                <button type="button" onclick="filterFacilities('clinic')" class="filter-btn">ক্লিনিক</button>
+                <button type="button" onclick="filterFacilities('hospital')" class="filter-btn">হাসপাতাল</button>
+                <button type="button" onclick="filterFacilities('pharmacy')" class="filter-btn">ফার্মেসি</button>
+                <button type="button" onclick="filterFacilities('chw')" class="filter-btn">স্বাস্থ্যকর্মী</button>
+            </div>
+        </div>
+
+        <!-- Facilities List -->
+        <div id="facilitiesList">
+            {% if facilities %}
+            <div style="display: grid; gap: 1.5rem;">
+                {% for facility in facilities %}
+                <div class="facility-card" data-type="{{ facility.facility_type }}">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div>
+                            <h3 style="color: #2d3748; margin-bottom: 0.5rem;">{{ facility.name }}</h3>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <span class="facility-badge {{ facility.facility_type }}">
+                                    {% if facility.facility_type == 'clinic' %}🏥 ক্লিনিক
+                                    {% elif facility.facility_type == 'hospital' %}🏨 হাসপাতাল
+                                    {% elif facility.facility_type == 'pharmacy' %}💊 ফার্মেসি
+                                    {% elif facility.facility_type == 'chw' %}👨‍⚕️ স্বাস্থ্যকর্মী
+                                    {% endif %}
+                                </span>
+                                <span style="color: #718096;">{{ facility.upazila }}, {{ facility.union }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="color: #4a5568; margin-bottom: 1rem;">
+                        <p><strong>ঠিকানা:</strong> {{ facility.address }}</p>
+                        {% if facility.contact %}
+                        <p><strong>যোগাযোগ:</strong> {{ facility.contact }}</p>
+                        {% endif %}
+                        {% if facility.hours %}
+                        <p><strong>সময়:</strong> {{ facility.hours }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    {% if facility.facility_type == 'chw' %}
+                    <div style="background: #e6fffa; padding: 1rem; border-radius: 8px; border-left: 4px solid #38b2ac;">
+                        <strong>সেবাসমূহ:</strong> মানসিক স্বাস্থ্য সহায়তা, প্রাথমিক চিকিৎসা, মাতৃস্বাস্থ্য
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="text-align: center; padding: 3rem; color: #718096;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                <h3>কোন স্বাস্থ্য সুবিধা পাওয়া যায়নি</h3>
+                <p>অনুগ্রহ করে অন্য উপজেলা বা ইউনিয়নের নাম দিয়ে খুঁজুন</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Offline Information -->
+    <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 10px; margin: 2rem 0;">
+        <h4 style="color: #856404; margin-bottom: 1rem;">📡 অফলাইন ব্যবহারের জন্য তথ্য</h4>
+        <p style="color: #856404; margin-bottom: 0.5rem;">ইন্টারনেট না থাকলেও এই তথ্য ব্যবহার করতে পারবেন:</p>
+        <ul style="color: #856404; padding-left: 1.5rem;">
+            <li>আপনার এলাকার কমিউনিটি ক্লিনিক: মঙ্গল ও বৃহস্পতিবার সকাল ৯টা থেকে দুপুর ১টা</li>
+            <li>জরুরী হলে: নিকটস্থ উপজেলা স্বাস্থ্য কমপ্লেক্সে যোগাযোগ করুন</li>
+            <li>কমিউনিটি স্বাস্থ্যকর্মী: স্থানীয় ইউনিয়ন পরিষদ থেকে পরিচয়পত্র দেখে নিন</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid #e2e8f0;
+    background: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.facility-card {
+    background: white;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.facility-card:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.facility-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.875rem;
+    font-weight: bold;
+}
+
+.facility-badge.clinic { background: #bee3f8; color: #2c5282; }
+.facility-badge.hospital { background: #c6f6d5; color: #276749; }
+.facility-badge.pharmacy { background: #fefcbf; color: #744210; }
+.facility-badge.chw { background: #e9d8fd; color: #553c9a; }
+</style>
+
+<script>
+function filterFacilities(type) {
+    const facilities = document.querySelectorAll('.facility-card');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    // Update active button
+    filterBtns.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Filter facilities
+    facilities.forEach(facility => {
+        if (type === 'all' || facility.dataset.type === type) {
+            facility.style.display = 'block';
+        } else {
+            facility.style.display = 'none';
+        }
+    });
+}
+
+// Load sample data if no facilities exist
+{% if not facilities %}
+document.addEventListener('DOMContentLoaded', function() {
+    // This would typically come from your backend
+    const sampleFacilities = [
+        {
+            name: "চর কলাপাড়া কমিউনিটি ক্লিনিক",
+            type: "clinic",
+            address: "চর কলাপাড়া বাজার সংলগ্ন",
+            upazila: "চরফ্যাশন",
+            union: "চর কলাপাড়া",
+            contact: "০১৮১২-৩৪৫৬৭৮",
+            hours: "মঙ্গল ও বৃহস্পতিবার সকাল ৯টা - দুপুর ১টা"
+        },
+        {
+            name: "ডাঃ করিমullah",
+            type: "chw", 
+            address: "গ্রাম: চর কলাপাড়া, বাড়ি নং ১২",
+            upazila: "চরফ্যাশন",
+            union: "চর কলাপাড়া",
+            contact: "০১৭১১-২২৩৩৪৪",
+            hours: "সকাল ৮টা - রাত ৮টা"
+        }
+    ];
+    
+    // You can implement client-side search with this data
+});
+{% endif %}
+</script>
+{% endblock %}
