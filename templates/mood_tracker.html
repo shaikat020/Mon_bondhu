@@ -45,6 +45,34 @@
         </form>
     </div>
     
+    <!-- Chat helper for people who need a safe space to say "I'm not okay" -->
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">কিছু বলতে চান? — মনবন্ধু এখানে শোনে</h2>
+
+        <div id="chatBox" style="max-height: 300px; overflow:auto; border:1px solid #e2e8f0; padding:1rem; border-radius:10px; margin-bottom:1rem;">
+            {% if chat_history %}
+                {% for item in chat_history %}
+                    <div style="margin-bottom:0.75rem;">
+                        <div style="font-weight:600; color:#2d3748;">আপনি:</div>
+                        <div style="margin-left:0.5rem; color:#4a5568;">{{ item.user }}</div>
+                        <div style="font-weight:600; color:#2d3748; margin-top:0.25rem;">মনবন্ধু:</div>
+                        <div style="margin-left:0.5rem; color:#2d3748;">{{ item.ai }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div style="color:#718096;">এখানে আপনি আপনার ভাবনা লিখতে পারেন — মনবন্ধু সংবেদনশীলভাবে উত্তর দেবে।</div>
+            {% endif %}
+        </div>
+
+        <form id="chatForm">
+            {% csrf_token %}
+            {{ chat_form.message }}
+            <button type="submit" class="btn" style="background:#667eea; color:white; margin-left:0.5rem;">পাঠান</button>
+        </form>
+
+        <div id="chatFeedback" style="display:none; margin-top:0.75rem; padding:0.5rem; border-radius:6px;"></div>
+    </div>
+
     <div id="moodMessage" style="display: none; background: #48bb78; color: white; padding: 1rem; border-radius: 10px; margin: 1rem 0; text-align: center;"></div>
     
     {% if recent_moods %}
@@ -126,6 +154,76 @@ document.addEventListener('DOMContentLoaded', function() {
             moodMessage.style.background = '#f56565';
         });
     });
+
+    // Chat form submission
+    const chatForm = document.getElementById('chatForm');
+    const chatBox = document.getElementById('chatBox');
+    const chatFeedback = document.getElementById('chatFeedback');
+
+    if (chatForm) {
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const input = document.getElementById('chatInput') || document.querySelector('[name="userMessage"]');
+            if (!input || !input.value.trim()) {
+                chatFeedback.textContent = 'একটি বার্তা লিখুন।';
+                chatFeedback.style.display = 'block';
+                chatFeedback.style.background = '#f56565';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('message', input.value.trim());
+
+            // include CSRF token
+            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]');
+            if (csrfToken) {
+                formData.append('csrfmiddlewaretoken', csrfToken.value);
+            }
+
+            fetch('{% url "mood_send_message" %}', {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.response) {
+                    // append to chatBox
+                    const container = document.createElement('div');
+                    container.style.marginBottom = '0.75rem';
+                    container.innerHTML = `<div style="font-weight:600; color:#2d3748;">আপনি:</div><div style="margin-left:0.5rem; color:#4a5568;">${escapeHtml(input.value.trim())}</div><div style="font-weight:600; color:#2d3748; margin-top:0.25rem;">মনবন্ধু:</div><div style="margin-left:0.5rem; color:#2d3748;">${escapeHtml(data.response)}</div>`;
+                    chatBox.appendChild(container);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+
+                    chatFeedback.textContent = 'মনবন্ধু উত্তর দিয়েছে।';
+                    chatFeedback.style.display = 'block';
+                    chatFeedback.style.background = '#48bb78';
+
+                    input.value = '';
+                } else if (data.error) {
+                    chatFeedback.textContent = data.error;
+                    chatFeedback.style.display = 'block';
+                    chatFeedback.style.background = '#f56565';
+                }
+            })
+            .catch(err => {
+                chatFeedback.textContent = 'একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।';
+                chatFeedback.style.display = 'block';
+                chatFeedback.style.background = '#f56565';
+            });
+        });
+    }
+
+    // small helper to avoid HTML injection into our simplistic chat box
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/\"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
 });
 </script>
 {% endblock %}
