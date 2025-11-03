@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
+<main class="container mx-auto px-4 py-8">
+    <div class="glass-morphism p-8 rounded-3xl">
     <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
         <h2 style="color: #4a5568; margin-bottom: 1rem;">আপনার নিকটস্থ স্বাস্থ্য সুবিধা খুঁজুন</h2>
         <p style="color: #718096; margin-bottom: 2rem;">আপনার এলাকার ক্লিনিক, হাসপাতাল, ফার্মেসি এবং কমিউনিটি স্বাস্থ্যকর্মী খুঁজে বের করুন</p>
@@ -10,8 +11,8 @@
         <div style="background: #f7fafc; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
             <form method="GET" style="display: grid; grid-template-columns: 1fr auto; gap: 1rem;">
                 <input type="text" name="upazila" placeholder="আপনার উপজেলা বা ইউনিয়নের নাম লিখুন..." 
-                       value="{{ request.GET.upazila }}"
-                       style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
+                    value="{{ request.GET.upazila }}"
+                    style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
                 <button type="submit" class="btn" style="background: #667eea; color: white;">খুঁজুন</button>
             </form>
             
@@ -84,7 +85,9 @@
             <li>কমিউনিটি স্বাস্থ্যকর্মী: স্থানীয় ইউনিয়ন পরিষদ থেকে পরিচয়পত্র দেখে নিন</li>
         </ul>
     </div>
-</div>
+    </div>
+    </div>
+</main>
 
 <style>
 .filter-btn {

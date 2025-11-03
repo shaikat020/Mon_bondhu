@@ -3,270 +3,697 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মনবন্ধু - আপনার মানসিক স্বাস্থ্য সহায়ক</title>
+    <title>মনবন্ধু (MonBondhu) - Community Health Navigator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Optimized font settings for Bangla text */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+            letter-spacing: 0.2px;
+            font-feature-settings: "kern" 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Improved font weights for better Bangla readability */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        p, a, button, input, textarea {
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        /* Light mode (default) - Warm, welcoming colors that work well with Bangla text */
+        body {
+            background: linear-gradient(-45deg, #FF6B6B, #4ECDC4, #45B7D1, #96E6B3);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            overflow-x: hidden;
+            perspective: 1000px;
+            min-height: 100vh;
+            color: #2D3436;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+        /* Dark mode - Softer, eye-friendly dark theme */
+        body.dark-mode {
+            background: linear-gradient(-45deg, #2C3E50, #2E1437, #1C2833, #1E3D59);
+            color: #ECF0F1;
+        }
+        @keyframes gradientShift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+        /* Improved glass morphism effect */
+        .glass-morphism { 
+            background: rgba(255,255,255,0.15); 
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px rgba(31,38,135,0.15);
         }
 
-        /* ===== Navbar ===== */
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+        /* Enhanced input styles with special chat input */
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            line-height: 1.5;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: inherit;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
         }
 
-        .nav-content {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Chat input specific styles */
+        .chat-input-container {
+            position: relative;
+            max-width: 800px;
+            margin: 1rem auto;
             display: flex;
-            justify-content: space-between;
+            gap: 0.5rem;
             align-items: center;
+            padding: 0.5rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
         }
 
-        .logo a {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #4a5568;
-            text-decoration: none;
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+            color: inherit;
+            font-size: 0.95rem;
+            resize: none;
+            min-height: 45px;
+            max-height: 120px;
+            overflow-y: auto;
         }
 
-        .logo span {
-            color: #667eea;
+        .chat-input:focus {
+            outline: none;
+            border-color: rgba(78, 205, 196, 0.4);
+            background: rgba(255, 255, 255, 0.12);
         }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #667eea;
-        }
-
-        /* ===== Sections ===== */
-        section {
-            padding: 4rem 2rem;
+        .chat-submit {
+            padding: 0.75rem;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4ECDC4, #45B7D1);
             color: white;
-            text-align: center;
-        }
-
-        .hero {
-            color: white;
-            padding: 5rem 2rem;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: white;
-            color: #667eea;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            transition: transform 0.3s, box-shadow 0.3s;
             border: none;
             cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 45px;
+            height: 45px;
+        }
+
+        .chat-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
+        }
+
+        .chat-submit:active {
+            transform: translateY(0);
+        }
+
+        /* General input styles */
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+        }
+
+        input::placeholder, select::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95rem;
+        }
+
+        /* Form group styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: inherit;
+        }
+
+        /* Enhanced button styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        /* ===== Features Section ===== */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 4rem 0;
+        .btn:active {
+            transform: translateY(0);
         }
 
-        .feature-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            color: #4a5568;
-            transition: transform 0.3s;
+        /* Animation effects */
+        .floating { 
+            animation: floating 6s ease-in-out infinite;
+            transform-origin: center;
         }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
+        @keyframes floating { 
+            0%, 100% { transform: translateY(0) rotate(0); }
+            25% { transform: translateY(-12px) rotate(1deg); }
+            75% { transform: translateY(8px) rotate(-1deg); }
         }
 
-        .feature-icon {
-            font-size: 2.5rem;
+        .pulse-glow { 
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow { 
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(78,205,196,0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 30px rgba(78,205,196,0.6);
+                transform: scale(1.03);
+            }
+        }
+
+        /* Interactive elements */
+        .mood-emoji { 
+            transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+            position: relative;
+            cursor: pointer;
+        }
+        .health-card{ background:linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(240,244,248,0.9) 100%); backdrop-filter: blur(10px); border-radius:20px; box-shadow:0 20px 40px rgba(0,0,0,0.1); transition: all .4s cubic-bezier(.23,1,.32,1); position:relative; overflow:hidden }
+        .tab-active{ background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; transform:translateY(-2px); box-shadow:0 5px 15px rgba(102,126,234,0.4) }
+        .particle{ position: fixed; pointer-events: none; opacity:0; animation: particleFloat 4s ease-out forwards }
+        @keyframes particleFloat { 0%{ opacity:1; transform: translateY(0) scale(0)}50%{ opacity:.8; transform: translateY(-100px) scale(1)}100%{ opacity:0; transform: translateY(-200px) scale(.5)} }
+        .slide-in{ animation: slideIn .6s cubic-bezier(.23,1,.32,1) }
+        @keyframes slideIn { from{ transform: translateX(-100%) rotateY(-90deg); opacity:0 } to{ transform: translateX(0) rotateY(0); opacity:1 } }
+        .fade-in{ animation: fadeIn .8s ease-out }
+        @keyframes fadeIn { from{ opacity:0; transform: translateY(20px) } to{ opacity:1; transform: translateY(0) } }
+        .flip-card{ background-color:transparent; width:100%; height:320px; perspective:1000px }
+        .flip-card-inner{ position:relative; width:100%; height:100%; text-align:center; transition:transform .8s; transform-style:preserve-3d }
+        .flip-card-front, .flip-card-back{ position:absolute; width:100%; height:100%; -webkit-backface-visibility:hidden; backface-visibility:hidden; border-radius:20px; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:20px }
+    .flip-card-back{ transform: rotateY(180deg) }
+    /* enable flipping the inner card when parent is hovered */
+    .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+    .gradient-text{ background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent }
+        .neon-glow{ text-shadow:0 0 10px rgba(102,126,234,0.8), 0 0 20px rgba(102,126,234,0.6), 0 0 30px rgba(102,126,234,0.4) }
+        .parallax-bg{ position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; opacity:.1 }
+        .stagger-animation > *{ opacity:0; animation: staggerFadeIn .6s ease-out forwards }
+        .stagger-animation > *:nth-child(1){ animation-delay:.1s } .stagger-animation > *:nth-child(2){ animation-delay:.2s } .stagger-animation > *:nth-child(3){ animation-delay:.3s }
+        @keyframes staggerFadeIn { from{ opacity:0; transform: translateY(30px) rotateX(-10deg) } to{ opacity:1; transform: translateY(0) rotateX(0) } }
+        .magnetic-button{ position:relative; transition: all .3s cubic-bezier(.23,1,.32,1) } .magnetic-button:hover{ transform:scale(1.05) }
+        .liquid-button::before{ content:''; position:absolute; top:50%; left:50%; width:0; height:0; border-radius:50%; background: rgba(255,255,255,0.5); transform: translate(-50%,-50%); transition: width .6s, height .6s }
+        .liquid-button:hover::before{ width:300px; height:300px }
+        .offline-indicator, .online-indicator{ position: fixed; bottom: 20px; right: 20px; color: white; padding:12px 24px; border-radius:50px; display:none; z-index:1000; animation: slideUp .5s ease-out }
+        .offline-indicator{ background: linear-gradient(135deg,#ff5252,#ff1744); box-shadow:0 10px 30px rgba(255,23,68,0.3) }
+        .online-indicator{ background: linear-gradient(135deg,#4caf50,#8bc34a); box-shadow:0 10px 30px rgba(76,175,80,0.3) }
+        @keyframes slideUp{ from{ transform: translateY(100px); opacity:0 } to{ transform: translateY(0); opacity:1 } }
+        .scroll-indicator{ position: fixed; top:0; left:0; height:4px; background: linear-gradient(90deg,#667eea,#764ba2); z-index:1000; transition: width .3s ease }
+    .text-gradient{ background: linear-gradient(90deg,#667eea,#764ba2,#667eea); background-size:200% auto; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation: textGradient 3s linear infinite }
+        @keyframes textGradient{ to{ background-position:200% center } }
+
+        /* Consistent heading styles for both modes */
+        .page-heading {
+            background: linear-gradient(135deg, #4ECDC4, #45B7D1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -0.02em;
             margin-bottom: 1rem;
         }
 
-        /* ===== Mission Section ===== */
-        .mission-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
+        .section-heading {
+            color: #4ECDC4;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
         }
 
-        .mission-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
+        /* Dark mode overrides with improved contrast */
+        body.dark-mode {
+            color: #ECF0F1;
+        }
+        
+        body.dark-mode .glass-morphism { 
+            background: rgba(24,24,27,0.7);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        /* Dark mode input styles */
+        body.dark-mode input,
+        body.dark-mode select,
+        body.dark-mode textarea {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: #ECF0F1;
+        }
+
+        body.dark-mode .chat-input-container {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .chat-input {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .chat-input:focus {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        body.dark-mode .chat-submit {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+        }
+
+        body.dark-mode .chat-submit:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        body.dark-mode input:focus,
+        body.dark-mode select:focus,
+        body.dark-mode textarea:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        body.dark-mode input::placeholder,
+        body.dark-mode select::placeholder,
+        body.dark-mode textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Keep headings consistent in dark mode */
+        body.dark-mode .page-heading {
+            background: linear-gradient(135deg, #4ECDC4, #45B7D1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.dark-mode .section-heading {
+            color: #4ECDC4;
+        }
+
+        body.dark-mode .btn-primary {
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+        }
+
+        body.dark-mode .btn-secondary {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        body.dark-mode .nav-link,
+        body.dark-mode .mobile-nav-link {
+            color: #E2E8F0;
+        }
+
+        body.dark-mode .nav-link:hover,
+        body.dark-mode .mobile-nav-link:hover { 
+            color: #60A5FA;
+            text-shadow: 0 0 20px rgba(96,165,250,0.3);
+        }
+
+        body.dark-mode .tab-active {
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            box-shadow: 0 4px 12px rgba(37,99,235,0.2);
+        }
+
+        body.dark-mode .health-card {
+            background: linear-gradient(135deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.95) 100%);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        /* Enhanced theme toggle button */
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 0.625rem 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: inherit;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle:active {
+            transform: translateY(0);
+        }
+
+        /* Navigation enhancements */
+        .nav-link, .mobile-nav-link {
+            padding: 0.5rem 1rem;
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .mobile-nav-link:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-link.active, .mobile-nav-link.active {
+            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
             color: white;
-        }
-
-        .mission-card h4 {
-            margin-bottom: 0.5rem;
-        }
-
-        /* ===== Footer ===== */
-        footer {
-            background: rgba(0, 0, 0, 0.85);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        footer p {
-            margin-bottom: 0.5rem;
+            box-shadow: 0 4px 12px rgba(78,205,196,0.2);
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== Navigation Bar ===== -->
-    <nav class="navbar">
-        <div class="nav-content">
-            <div class="logo">
-                <a href="{% url 'home' %}">
-                    মন<span>বন্ধু</span>
-                </a>
+    <!-- Parallax Background -->
+    <div class="parallax-bg"></div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+    
+    <!-- Offline/Online Indicators -->
+    <div id="offlineIndicator" class="offline-indicator">
+        <i class="fas fa-wifi-slash mr-2"></i> অফলাইন মোডে
+    </div>
+    <div id="onlineIndicator" class="online-indicator">
+        <i class="fas fa-wifi mr-2"></i> অনলাইন
+    </div>
+
+    <!-- Header -->
+    <header class="glass-morphism text-white shadow-2xl sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="morphing-shape floating" style="width: 50px; height: 50px;"></div>
+                    <h1 class="text-3xl font-bold glitch" data-text="মনবন্ধু">মনবন্ধু</h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="themeToggle" class="theme-toggle hidden md:inline-flex" aria-label="Toggle theme">
+                        <i id="themeIcon" class="fas fa-moon"></i>
+                        <span class="hidden sm:inline">রঙ</span>
+                    </button>
+                    <button id="menuToggle" class="md:hidden text-2xl hover:scale-110 transition-transform">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+                <nav id="mainNav" class="hidden md:flex space-x-6">
+                    <a href="{% url 'home' %}#home" class="nav-link hover:text-purple-200 transition hover:scale-110 transform">হোম</a>
+                    <a href="{% url 'home' %}#features" class="nav-link hover:text-purple-200 transition hover:scale-110 transform">বৈশিষ্ট্য</a>
+                    <a href="{% url 'home' %}#about" class="nav-link hover:text-purple-200 transition hover:scale-110 transform">সম্পর্কে</a>
+                    <a href="{% url 'home' %}#contact" class="nav-link hover:text-purple-200 transition hover:scale-110 transform">যোগাযোগ</a>
+                </nav>
             </div>
-            <ul class="nav-links">
-                <li><a href="#home">হোম</a></li>
-                <li><a href="#features">ফিচারসমূহ</a></li>
-                <li><a href="#missions">মিশন</a></li>
-                <li><a href="#about">আমাদের সম্পর্কে</a></li>
-            </ul>
         </div>
-    </nav>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden glass-morphism md:hidden absolute top-full left-0 right-0 z-30">
+        <nav class="flex flex-col p-4 space-y-3">
+            <a href="{% url 'home' %}#home" class="mobile-nav-link hover:bg-purple-500 hover:bg-opacity-20 p-3 rounded-lg transition">হোম</a>
+            <a href="{% url 'home' %}#features" class="mobile-nav-link hover:bg-purple-500 hover:bg-opacity-20 p-3 rounded-lg transition">বৈশিষ্ট্য</a>
+            <a href="{% url 'home' %}#about" class="mobile-nav-link hover:bg-purple-500 hover:bg-opacity-20 p-3 rounded-lg transition">সম্পর্কে</a>
+            <a href="{% url 'home' %}#contact" class="mobile-nav-link hover:bg-purple-500 hover:bg-opacity-20 p-3 rounded-lg transition">যোগাযোগ</a>
+        </nav>
+    </div>
 
     <!-- ===== Django Content Block ===== -->
-    {% block content %}
-    
-    <!-- Home Section -->
-    <section id="home" class="hero">
-        <h1>স্বাগতম মনবন্ধুতে</h1>
-        <p>আপনার মানসিক স্বাস্থ্যের সাথী, যে প্রতিদিন পাশে থাকবে।</p>
-        <a href="#features" class="btn">আরও জানুন</a>
-    </section>
+    {% block content %}{% endblock %}
 
-    <!-- Features Section -->
-    <section id="features">
-        <h2>ফিচারসমূহ</h2>
-        <div class="features">
-            <div class="feature-card">
-                <div class="feature-icon">💬</div>
-                <h3>পরামর্শ সহায়তা</h3>
-                <p>বিশেষজ্ঞ পরামর্শ ও মানসিক স্বাস্থ্যের সঠিক নির্দেশনা।</p>
+    <!-- Footer -->
+    <footer class="glass-morphism text-white py-8 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="morphing-shape" style="width: 50px; height: 50px;"></div>
+                        <h3 class="text-2xl font-bold">মনবন্ধু</h3>
+                    </div>
+                    <p class="text-white opacity-90">গ্রামীণ বাংলাদেশের জন্য স্বাস্থ্যসেবা ন্যাভিগেটর</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="hover:scale-110 transition-transform"><i class="fab fa-facebook text-2xl"></i></a>
+                    <a href="#" class="hover:scale-110 transition-transform"><i class="fab fa-twitter text-2xl"></i></a>
+                    <a href="#" class="hover:scale-110 transition-transform"><i class="fab fa-instagram text-2xl"></i></a>
+                    <a href="#" class="hover:scale-110 transition-transform"><i class="fab fa-youtube text-2xl"></i></a>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>মানসিক বিশ্লেষণ</h3>
-                <p>আপনার মানসিক অবস্থার বিশ্লেষণ ও রিপোর্ট প্রদান।</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🤝</div>
-                <h3>কমিউনিটি সাপোর্ট</h3>
-                <p>সহানুভূতিশীল সমাজ গঠনে একে অপরের পাশে থাকা।</p>
+            
+            <div class="border-t border-white border-opacity-20 mt-6 pt-6 text-center">
+                <p class="text-white opacity-90">© ২০২৩ মনবন্ধু। সর্বস্বত্ব সংরক্ষিত।</p>
             </div>
         </div>
-    </section>
-
-    <!-- Mission Section -->
-    <section id="missions">
-        <h2>আমাদের মিশন</h2>
-        <div class="mission-grid">
-            <div class="mission-card">
-                <h4>মানসিক সচেতনতা বৃদ্ধি</h4>
-                <p>গ্রামীণ পর্যায়ে মানসিক স্বাস্থ্যের গুরুত্ব ছড়িয়ে দেওয়া।</p>
-            </div>
-            <div class="mission-card">
-                <h4>সহায়ক কমিউনিটি গঠন</h4>
-                <p>সমাজে একে অপরের প্রতি সহমর্মিতা ও সহায়তা বৃদ্ধি।</p>
-            </div>
-            <div class="mission-card">
-                <h4>প্রযুক্তির মাধ্যমে সহায়তা</h4>
-                <p>সবার জন্য সহজলভ্য মানসিক স্বাস্থ্য সেবা প্রদান।</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about">
-        <h2>আমাদের সম্পর্কে</h2>
-        <p>“মনবন্ধু” একটি ডিজিটাল উদ্যোগ যা বাংলাদেশের গ্রামীণ জনগোষ্ঠীর মানসিক স্বাস্থ্য সচেতনতা ও সহায়তাকে সহজলভ্য করতে তৈরি হয়েছে।</p>
-    </section>
-
-    {% endblock %}
-
-    <!-- ===== Footer ===== -->
-    <footer>
-        <p>© 2024 মনবন্ধু - কমিউনিটি হেলথ নেভিগেটর ফর রুরাল বাংলাদেশ</p>
-        <p>বাংলাদেশের গ্রামীণ সম্প্রদায়ের জন্য মানসিক স্বাস্থ্য সহায়তা</p>
     </footer>
 
-    <!-- ===== Smooth Scroll Script ===== -->
     <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const targetId = this.getAttribute('href');
-                if (targetId.startsWith('#')) {
-                    e.preventDefault();
-                    const target = document.querySelector(targetId);
-                    if (target) {
-                        target.scrollIntoView({ behavior: 'smooth' });
+        // Theme handling
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // Set default dark mode
+        body.classList.add('dark-mode');
+
+        // Load saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            body.classList.remove('dark-mode');
+        }
+        updateThemeIcon(savedTheme === 'light');
+
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', () => {
+            const isDark = body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(!isDark);
+        });
+
+        function updateThemeIcon(isLight) {
+            themeIcon.classList.remove(isLight ? 'fa-moon' : 'fa-sun');
+            themeIcon.classList.add(isLight ? 'fa-sun' : 'fa-moon');
+            themeIcon.title = isLight ? 'Switch to Dark Mode' : 'Switch to Light Mode';
+        }
+
+        // Global variables
+        let currentSection = 'home';
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check online/offline status
+            updateOnlineStatus();
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            
+            // Initialize navigation
+            initializeNavigation();
+            
+            // Initialize scroll indicator
+            initializeScrollIndicator();
+            
+            // Initialize particle effects
+            initializeParticleEffects();
+            
+            // Initialize magnetic buttons
+            initializeMagneticButtons();
+            
+            // Add typing effect to title
+            addTypingEffect();
+        });
+        
+        // Navigation functions
+        function initializeNavigation() {
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    mobileMenu.classList.toggle('hidden');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('slide-in');
                     }
+                });
+            }
+            
+            // Navigation links
+            const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const targetHref = this.getAttribute('href');
+                    const targetHash = targetHref.split('#')[1];
+
+                    // Close mobile menu
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    if (mobileMenu) mobileMenu.classList.add('hidden');
+
+                    // If we're already on the home page and there's a hash
+                    if (window.location.pathname === '/' && targetHash) {
+                        e.preventDefault();
+                        showSection(targetHash);
+                        history.pushState(null, '', `#${targetHash}`);
+                    }
+                });
+            });
+
+            // Handle initial page load with hash
+            if (window.location.hash) {
+                const initialHash = window.location.hash.substring(1);
+                showSection(initialHash);
+            }
+        }
+        
+        function showSection(sectionId) {
+            // Hide all sections with animation
+            const sections = document.querySelectorAll('main > section, section');
+            sections.forEach(section => {
+                if (!section.classList.contains('hidden')) {
+                    section.style.opacity = '0';
+                    section.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        section.classList.add('hidden');
+                    }, 300);
                 }
             });
-        });
+            
+            // Show selected section with animation
+            setTimeout(() => {
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
+                    targetSection.style.opacity = '0';
+                    targetSection.style.transform = 'translateY(20px)';
+                    
+                    setTimeout(() => {
+                        targetSection.style.opacity = '1';
+                        targetSection.style.transform = 'translateY(0)';
+                        targetSection.style.transition = 'all 0.5s ease-out';
+                    }, 50);
+                    
+                    currentSection = sectionId;
+                    
+                    // Update active nav link
+                    const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+                    navLinks.forEach(link => {
+                        const href = link.getAttribute('href');
+                        link.classList.remove('tab-active');
+                        
+                        // Check for both full path (#section) and fragment-only links
+                        if (href.includes(`#${sectionId}`)) {
+                            link.classList.add('tab-active');
+                        }
+                    });
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 300);
+        }
+        
+        // Scroll indicator
+        function initializeScrollIndicator() {
+            window.addEventListener('scroll', function() {
+                const scrollIndicator = document.getElementById('scrollIndicator');
+                const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPosition = window.scrollY;
+                const scrollPercentage = scrollHeight > 0 ? (scrollPosition / scrollHeight) * 100 : 0;
+                if (scrollIndicator) scrollIndicator.style.width = scrollPercentage + '%';
+            });
+        }
+        
+        // Particle effects
+        function initializeParticleEffects() {
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('button') || e.target.closest('.flip-card')) {
+                    createParticle(e.clientX, e.clientY);
+                }
+            });
+        }
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.width = '10px';
+            particle.style.height = '10px';
+            particle.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 2000);
+        }
+        
+        // Online/Offline status
+        function updateOnlineStatus() {
+            const offlineEl = document.getElementById('offlineIndicator');
+            const onlineEl = document.getElementById('onlineIndicator');
+            if (navigator.onLine) {
+                if (offlineEl) offlineEl.style.display = 'none';
+                if (onlineEl) { onlineEl.style.display = 'block'; setTimeout(()=> onlineEl.style.display='none', 2000); }
+            } else {
+                if (onlineEl) onlineEl.style.display = 'none';
+                if (offlineEl) offlineEl.style.display = 'block';
+            }
+        }
+        
+        // Magnetic buttons (simple hover)
+        function initializeMagneticButtons() {
+            document.querySelectorAll('.magnetic-button').forEach(btn => {
+                btn.addEventListener('mousemove', (e)=>{
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width/2;
+                    const y = e.clientY - rect.top - rect.height/2;
+                    btn.style.transform = `translate(${x*0.05}px, ${y*0.05}px) scale(1.02)`;
+                });
+                btn.addEventListener('mouseleave', ()=> btn.style.transform = 'translate(0,0)');
+            });
+        }
+        
+        // Typing effect for glitch title (simple)
+        function addTypingEffect() {
+            // keep for future enhancements
+        }
     </script>
 </body>
 </html>
