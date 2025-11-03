@@ -46,6 +46,7 @@
         .logo span {
             color: #667eea;
         }
+
         
         .nav-links {
             display: flex;
@@ -167,7 +168,7 @@
 <body>
     <nav class="navbar">
         <div class="nav-content">
-            <div class="logo">মন<span>বন্ধু</span></div>
+            <a href="{% url 'home' %}" style="text-decoration:none;color:inherit;"><div class="logo">মন<span>বন্ধু</span></div></a>
             <ul class="nav-links">
                 <li><a href="#home">হোম</a></li>
                 <li><a href="#features">ফিচারসমূহ</a></li>
