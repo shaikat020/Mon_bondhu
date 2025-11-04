@@ -4,43 +4,48 @@
 <main class="container mx-auto px-4 py-8">
     <div class="glass-morphism p-8 rounded-3xl">
     <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-        <h2 style="color: #4a5568; margin-bottom: 2rem;">আপনার আজকের অনুভূতি কেমন?</h2>
-        
+.        <h2 class="mb-heading-black" style="margin-bottom: 2rem;">আপনার আজকের অনুভূতি কেমন?</h2>
+
         <form id="moodForm" method="POST">
             {% csrf_token %}
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-                <label style="text-align: center; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer;">
-                    <input type="radio" name="mood" value="happy" style="display: none;">
-                    <div style="font-size: 2rem;">😊</div>
-                    <div>খুব ভালো</div>
-                </label>
-                
+                <!-- Reordered to: ঠিক আছে, খুব ভালো, কিছুটা খারাপ, চিন্তিত, রাগান্বিত -->
                 <label style="text-align: center; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer;">
                     <input type="radio" name="mood" value="neutral" style="display: none;">
-                    <div style="font-size: 2rem;">😐</div>
-                    <div>ঠিক আছে</div>
+                    <div style="font-size: 2rem;">👌</div>
+                    <div class="mb-text-black">ঠিক আছে</div>
                 </label>
-                
+
+                <label style="text-align: center; padding: 1rem; border: 2px solid #434952ff; border-radius: 10px; cursor: pointer;">
+                    <input type="radio" name="mood" value="happy" style="display: none;">
+                    <div style="font-size: 2rem;">😊</div>
+                    <div class="mb-text-black">খুব ভালো</div>
+                </label>
+
                 <label style="text-align: center; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer;">
                     <input type="radio" name="mood" value="sad" style="display: none;">
                     <div style="font-size: 2rem;">😔</div>
-                    <div>কিছুটা খারাপ</div>
+                    <div class="mb-text-black">কিছুটা খারাপ</div>
                 </label>
-                
+
                 <label style="text-align: center; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer;">
                     <input type="radio" name="mood" value="anxious" style="display: none;">
                     <div style="font-size: 2rem;">😰</div>
-                    <div>চিন্তিত</div>
+                    <div class="mb-text-black">চিন্তিত</div>
                 </label>
-                
+
                 <label style="text-align: center; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer;">
                     <input type="radio" name="mood" value="angry" style="display: none;">
                     <div style="font-size: 2rem;">😠</div>
-                    <div>রাগান্বিত</div>
+                    <div class="mb-text-black">রাগান্বিত</div>
                 </label>
             </div>
             
-            <textarea name="notes" placeholder="আপনার আজকের অনুভূতি সম্পর্কে লিখুন (ঐচ্ছিক)..." style="width: 100%; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; margin-bottom: 1rem; resize: vertical;"></textarea>
+            <textarea 
+  name="notes" 
+  placeholder="আপনার আজকের অনুভূতি সম্পর্কে লিখুন (ঐচ্ছিক)..." 
+  style="width: 100%; color: #000000; padding: 1rem; border: 2px solid #000000; border-radius: 10px; margin-bottom: 1rem; resize: vertical;"
+></textarea>
             
             <button type="submit" class="btn" style="background: #667eea; color: white;">জমা দিন</button>
         </form>

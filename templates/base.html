@@ -406,6 +406,11 @@
             color: white;
             box-shadow: 0 4px 12px rgba(78,205,196,0.2);
         }
+        /* Global helper: force specific headings or inline text to solid black */
+        .mb-heading-black { color: #000000 !important; }
+        .mb-text-black { color: #000000 !important; }
+        /* Keep these forced blacks even if dark mode is active */
+        .dark-mode .mb-heading-black, .dark-mode .mb-text-black { color: #000000 !important; }
     </style>
 </head>
 <body>
