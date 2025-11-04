@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .hero-section {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 4rem 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .hero-content h1 {
+        font-size: 3.5rem;
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+
+    .hero-content h2 {
+        font-size: 1.8rem;
+        color: #667eea;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-description {
+        font-size: 1.2rem;
+        color: #4a5568;
+        margin-bottom: 2rem;
+    }
+
+    .cta-button {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .voice-illustration {
+        text-align: center;
+    }
+
+    .mic-icon {
+        font-size: 8rem;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .features-section {
+        background: rgba(255, 255, 255, 0.95);
+        margin: 4rem auto;
+        padding: 4rem 2rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .features-section h2 {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        color: #2d3748;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .feature-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+        color: #4a5568;
+    }
+
+    .how-it-works {
+        background: rgba(255, 255, 255, 0.95);
+        margin: 4rem auto;
+        padding: 4rem 2rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .how-it-works h2 {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        color: #2d3748;
+    }
+
+    .steps {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .step {
+        text-align: center;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .step-number {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        background: #667eea;
+        color: white;
+        border-radius: 50%;
+        line-height: 60px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 2.5rem;
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .steps {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>মন বন্ধু</h1>
+        <h2>আপনার ভয়েস-চালিত স্বাস্থ্য সহায়ক</h2>
+        <p class="hero-description">
+            কথা বলুন, শুনুন, সহায়তা পান। ডিজিটাল সাক্ষরতার প্রয়োজন নেই।
+        </p>
+        <a href="{% url 'voice_assistant' %}" class="cta-button">
+            ভয়েস সহায়ক শুরু করুন
+        </a>
+    </div>
+    <div class="hero-image">
+        <div class="voice-illustration">
+            <div class="mic-icon">🎤</div>
+        </div>
+    </div>
+</div>
+
+<div class="features-section">
+    <div class="container">
+        <h2>বিশেষ সুবিধাসমূহ</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🗣️</div>
+                <h3>বাংলা ভয়েস কমান্ড</h3>
+                <p>বাংলা বা ইংরেজি যেকোনো ভাষায় কথা বলুন</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏥</div>
+                <h3>হাসপাতাল তথ্য</h3>
+                <p>নিকটবর্তী হাসপাতালের ঠিকানা ও তথ্য</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💡</div>
+                <h3>স্বাস্থ্য টিপস</h3>
+                <p>নিয়মিত স্বাস্থ্য সংক্রান্ত পরামর্শ</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">😊</div>
+                <h3>মুড চেক-ইন</h3>
+                <p>কথা বলে আপনার মানসিক অবস্থা শেয়ার করুন</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="how-it-works">
+    <div class="container">
+        <h2>কিভাবে কাজ করে</h2>
+        <div class="steps">
+            <div class="step">
+                <span class="step-number">১</span>
+                <p>মাইক্রোফোন বাটন টিপুন</p>
+            </div>
+            <div class="step">
+                <span class="step-number">২</span>
+                <p>বাংলা বা ইংরেজিতে কথা বলুন</p>
+            </div>
+            <div class="step">
+                <span class="step-number">৩</span>
+                <p>সহায়ক আপনার কথার উত্তর দিবে</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

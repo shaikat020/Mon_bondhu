@@ -1,195 +1,806 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ভয়েস সহায়ক - Mon Bondhu{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-        <h2 style="color: #4a5568; margin-bottom: 1rem;">ভয়েস-ফার্স্ট হেলথ অ্যাসিস্ট্যান্ট</h2>
-        <p style="color:#718096;">আপনি বাংলা বলে নির্দেশ দিন। অ্যাপ শুনবে এবং কণ্ঠে উত্তর দেবে। (ব্রাউজারের Web Speech API ব্যবহার করে)</p>
+<style>
+    .voice-assistant-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
 
-        <div style="display:flex; gap:0.5rem; align-items:center; margin-bottom:1rem;">
-            <button id="startBtn" class="btn" style="background:#667eea; color:white;">শুরু করুন</button>
-            <button id="stopBtn" class="btn" style="background:#a0aec0; color:white;">বন্ধ করুন</button>
-            <div id="status" style="color:#718096; margin-left:1rem;">প্রস্তুত</div>
-        </div>
+    .assistant-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
 
-        <div id="transcript" style="min-height:2rem; padding:1rem; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:1rem; color:#2d3748;"></div>
+    .assistant-header h1 {
+        font-size: 2.5rem;
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
 
-        <div id="chatBox" style="max-height:300px; overflow:auto; border:1px solid #e2e8f0; padding:1rem; border-radius:10px; margin-bottom:1rem;">
-            <div style="color:#718096;">আসা উত্তর এখানে শোনানো হবে এবং প্রদর্শিত হবে।</div>
-        </div>
+    .browser-support {
+        background: #e6fffa;
+        border: 1px solid #81e6d9;
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 1rem 0;
+        text-align: center;
+    }
 
-        <div style="margin-bottom:1rem;">
-            <h4 style="margin-bottom:0.5rem; color:#4a5568;">কিছপা স্বাস্থ্য টিপ (অফলাইন)</h4>
+    .browser-support ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin: 1rem 0;
+    }
+
+    .browser-support li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .voice-visualization {
+        margin: 2rem 0;
+    }
+
+    .visualizer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        height: 60px;
+    }
+
+    .bar {
+        width: 6px;
+        height: 20px;
+        background: #667eea;
+        border-radius: 3px;
+        transition: height 0.3s;
+    }
+
+    .mic-container {
+        text-align: center;
+        margin: 2rem 0;
+    }
+
+    .mic-button {
+        background: #667eea;
+        border: none;
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        position: relative;
+    }
+
+    .mic-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .mic-button.listening {
+        background: #e53e3e;
+        animation: pulse 1.5s infinite;
+    }
+
+    .mic-button:disabled {
+        background: #a0aec0;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .mic-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .command-display, .response-display {
+        background: #f7fafc;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border-left: 4px solid #667eea;
+        min-height: 80px;
+    }
+
+    .command-text, .response-text {
+        font-size: 1.1rem;
+        color: #2d3748;
+    }
+
+    .suggestions {
+        margin-top: 2rem;
+    }
+
+    .suggestions h3 {
+        margin-bottom: 1rem;
+        color: #2d3748;
+    }
+
+    .suggestion-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .chip {
+        background: #edf2f7;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: #4a5568;
+        font-family: inherit;
+    }
+
+    .chip:hover {
+        background: #667eea;
+        color: white;
+    }
+
+    .ai-features {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: #f7fafc;
+        border-radius: 10px;
+        border-left: 4px solid #805ad5;
+    }
+
+    .ai-features h3 {
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+
+    .features-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .feature-item {
+        background: white;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 500;
+        color: #4a5568;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .status-text {
+        margin-top: 1rem;
+        color: #4a5568;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .error-message {
+        background: #fed7d7;
+        color: #c53030;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        text-align: center;
+        border-left: 4px solid #e53e3e;
+    }
+
+    .permission-help {
+        background: #fffaf0;
+        border: 1px solid #ed8936;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+
+    @keyframes equalize {
+        0% { height: 20px; }
+        50% { height: 60px; }
+        100% { height: 20px; }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4); }
+        50% { transform: scale(1.1); box-shadow: 0 8px 25px rgba(229, 62, 62, 0.6); }
+        100% { transform: scale(1); box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .listening-animation {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border: 3px solid #e53e3e;
+        border-radius: 50%;
+        animation: listeningPulse 2s infinite;
+    }
+
+    @keyframes listeningPulse {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    @media (max-width: 768px) {
+        .voice-assistant-container {
+            margin: 1rem;
+            padding: 1rem;
+        }
+        
+        .suggestion-chips {
+            justify-content: center;
+        }
+        
+        .features-list {
+            grid-template-columns: 1fr;
+        }
+        
+        .mic-button {
+            width: 100px;
+            height: 100px;
+        }
+    }
+</style>
+
+<div class="voice-assistant-container">
+    <div class="assistant-header">
+        <h1>মন বন্ধু - AI ভয়েস সহায়ক</h1>
+        <p>বাংলা, ইংরেজি বা মিশ্র ভাষায় কথা বলুন। আমি AI দিয়ে আপনার সাহায্য করব</p>
+        
+        <div class="browser-support">
+            <strong>সর্বোচ্চ সামর্থ্যের জন্য:</strong>
             <ul>
-                {% for tip in cached_tips %}
-                <li style="color:#2d3748;">{{ tip }}</li>
-                {% endfor %}
+                <li>✅ Chrome Browser</li>
+                <li>✅ HTTPS Connection</li>
+                <li>✅ Microphone Access</li>
             </ul>
+            <small>ভয়েস রিকগনিশন শুধুমাত্র Chrome ব্রাউজারে সেরা কাজ করে</small>
+        </div>
+    </div>
+
+    <div class="assistant-interface">
+        <!-- Error Messages -->
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <!-- Permission Help -->
+        <div id="permissionHelp" class="permission-help" style="display: none;">
+            <h4>মাইক্রোফোন এক্সেস সমস্যা?</h4>
+            <p>1. ব্রাউজারের address bar-এ মাইক্রোফোন আইকনে ক্লিক করুন</p>
+            <p>2. "Allow" সিলেক্ট করুন</p>
+            <p>3. পেজটি রিফ্রেশ করুন</p>
         </div>
 
+        <div class="voice-visualization">
+            <div class="visualizer" id="visualizer">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+
+        <div class="mic-container">
+            <button id="micButton" class="mic-button">
+                <span class="mic-icon">🎤</span>
+                <span class="mic-text">কথা বলুন</span>
+            </button>
+            <div id="statusText" class="status-text">মাইক্রোফোন বাটন চাপুন</div>
+        </div>
+
+        <div class="command-display">
+            <div id="commandText" class="command-text">
+                আপনার কমান্ড এখানে দেখানো হবে...
+            </div>
+        </div>
+
+        <div class="response-display">
+            <div id="responseText" class="response-text">
+                AI সহায়কের উত্তর এখানে দেখানো হবে...
+            </div>
+        </div>
+
+        <div class="suggestions">
+            <h3>উদাহরণ কমান্ড:</h3>
+            <div class="suggestion-chips">
+                <button class="chip" data-command="স্বাস্থ্য তথ্য দেখাও">স্বাস্থ্য টিপস</button>
+                <button class="chip" data-command="হাসপাতাল কোথায়">হাসপাতাল খুঁজুন</button>
+                <button class="chip" data-command="আমি আজ কেমন আছি">মুড চেক</button>
+                <button class="chip" data-command="জরুরী">জরুরী সাহায্য</button>
+                <button class="chip" data-command="সর্দি কাশির জন্য কী করব">সর্দি কাশি</button>
+                <button class="chip" data-command="রক্তচাপ কমাতে কী করব">রক্তচাপ</button>
+            </div>
+        </div>
+
+        <div class="ai-features">
+            <h3>AI সুবিধাসমূহ:</h3>
+            <div class="features-list">
+                <div class="feature-item">🎯 বুদ্ধিমান বাংলা উত্তর</div>
+                <div class="feature-item">💭 অনুভূতি বিশ্লেষণ</div>
+                <div class="feature-item">🏥 জরুরী স্বাস্থ্য পরামর্শ</div>
+                <div class="feature-item">🔊 প্রাকৃতিক কণ্ঠস্বর</div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-(function(){
-    const startBtn = document.getElementById('startBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    const status = document.getElementById('status');
-    const transcriptEl = document.getElementById('transcript');
-    const chatBox = document.getElementById('chatBox');
-
-    const csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value || '';
-
-    // SpeechRecognition setup
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-        status.textContent = 'আপনার ব্রাউজার SpeechRecognition সমর্থন করে না।';
-        startBtn.disabled = true;
-        stopBtn.disabled = true;
-        return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'bn-BD'; // Bangla (Bangladesh) if available
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    let expectMood = false;
-
-    recognition.addEventListener('start', () => {
-        status.textContent = 'শুনছি... কথা বলুন';
-    });
-
-    recognition.addEventListener('end', () => {
-        status.textContent = 'শুনা শেষ';
-    });
-
-    recognition.addEventListener('result', (e) => {
-        const text = Array.from(e.results).map(r => r[0].transcript).join('\n');
-        transcriptEl.textContent = text;
-
-        if (expectMood) {
-            // map speech to mood and POST to mood tracker
-            const moodKey = mapMoodFromText(text);
-            if (moodKey) {
-                postMood(moodKey, 'ভয়েস ইনপুট');
-                expectMood = false;
-                appendToChat('আপনি', text);
-                appendToChat('মনবন্ধু', 'আপনার মুড রেকর্ড করা হয়েছে।');
-                speak('আপনার মুড রেকর্ড করা হয়েছে।');
-            } else {
-                appendToChat('মনবন্ধু', 'আমি আপনার মুড বুঝতে পারিনি। অনুগ্রহ করে আবার বলুন: খুব ভালো, ঠিক আছে, কিছুটা খারাপ, চিন্তিত, বা রাগান্বিত।');
-                speak('আমি আপনার মুড বুঝতে পারিনি, অনুগ্রহ করে আবার বলুন।');
-            }
-            return;
+    class VoiceAssistant {
+        constructor() {
+            this.isListening = false;
+            this.recognition = null;
+            this.synthesis = window.speechSynthesis;
+            this.awaitingMoodResponse = false;
+            this.supported = false;
+            this.initializeVoiceRecognition();
+            this.setupEventListeners();
+            this.checkBrowserSupport();
         }
 
-        // Normal flow: send recognized text to server for processing
-        appendToChat('আপনি', text);
-        sendCommand(text);
-    });
+        checkBrowserSupport() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            this.supported = !!SpeechRecognition;
+            
+            if (!this.supported) {
+                this.showError('দুঃখিত, আপনার ব্রাউজার ভয়েস রিকগনিশন সাপোর্ট করে না। Chrome ব্রাউজার ব্যবহার করুন।');
+                document.getElementById('micButton').disabled = true;
+            }
+        }
 
-    startBtn.addEventListener('click', () => {
-        try { recognition.start(); } catch (e) { /* ignore */ }
-    });
-    stopBtn.addEventListener('click', () => recognition.stop());
+        initializeVoiceRecognition() {
+            if (!this.supported) return;
 
-    function appendToChat(who, message) {
-        const container = document.createElement('div');
-        container.style.marginBottom = '0.75rem';
-        container.innerHTML = `<div style="font-weight:600; color:#2d3748;">${who}:</div><div style="margin-left:0.5rem; color:#4a5568;">${escapeHtml(message)}</div>`;
-        chatBox.appendChild(container);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            this.recognition = new SpeechRecognition();
+            
+            // Configure recognition
+            this.recognition.continuous = false;
+            this.recognition.interimResults = false;
+            this.recognition.lang = 'bn-BD';
+            this.recognition.maxAlternatives = 1;
 
-    function speak(text) {
-        if (!window.speechSynthesis) return;
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = 'bn-BD';
-        // try to set a Bengali voice if available
-        const voices = window.speechSynthesis.getVoices();
-        const bnVoice = voices.find(v => v.lang && v.lang.startsWith('bn')) || voices.find(v => v.name && v.name.toLowerCase().includes('bengali'));
-        if (bnVoice) utter.voice = bnVoice;
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utter);
-    }
+            // Event handlers
+            this.recognition.onstart = () => {
+                console.log('Voice recognition started');
+                this.isListening = true;
+                this.updateUI();
+                this.startVisualization();
+                this.hideError();
+            };
 
-    function sendCommand(command) {
-        // show thinking
-        const thinking = document.createElement('div');
-        thinking.style.marginBottom = '0.75rem';
-        thinking.style.opacity = '0.9';
-        thinking.innerHTML = `<div style="font-weight:600; color:#2d3748;">মনবন্ধু ভাবছে...</div><div style="margin-left:0.5rem; color:#718096;">অপেক্ষা করুন...</div>`;
-        thinking.className = 'thinking-indicator';
-        chatBox.appendChild(thinking);
-        chatBox.scrollTop = chatBox.scrollHeight;
+            this.recognition.onend = () => {
+                console.log('Voice recognition ended');
+                this.isListening = false;
+                this.updateUI();
+                this.stopVisualization();
+            };
 
-        const formData = new FormData();
-        formData.append('command', command);
-        formData.append('csrfmiddlewaretoken', csrftoken);
+            this.recognition.onresult = (event) => {
+                console.log('Voice recognition result received');
+                const command = event.results[0][0].transcript;
+                console.log('Recognized command:', command);
+                
+                if (this.awaitingMoodResponse) {
+                    this.processMoodResponse(command);
+                } else {
+                    this.processCommand(command);
+                }
+            };
 
-        fetch('{% url "voice_send_command" %}', { method: 'POST', body: formData, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-            .then(r => r.json())
-            .then(data => {
-                if (thinking && thinking.parentNode) thinking.parentNode.removeChild(thinking);
-                if (data.response) {
-                    appendToChat('মনবন্ধু', data.response);
-                    speak(data.response);
-                    if (data.action === 'expect_mood') {
-                        // next recognition should capture mood
-                        expectMood = true;
-                        // start listening for mood answer automatically
-                        try { recognition.start(); } catch (e) { /* ignore */ }
+            this.recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                
+                let errorMessage = 'দুঃখিত, আপনার কথা শুনতে পাইনি। আবার চেষ্টা করুন।';
+                
+                switch(event.error) {
+                    case 'not-allowed':
+                    case 'permission-denied':
+                        errorMessage = 'মাইক্রোফোন এক্সেস দেওয়া হয়নি। ব্রাউজার সেটিংস চেক করুন।';
+                        this.showPermissionHelp();
+                        break;
+                    case 'network':
+                        errorMessage = 'নেটওয়ার্ক সমস্যা। ইন্টারনেট কানেকশন চেক করুন।';
+                        break;
+                    case 'audio-capture':
+                        errorMessage = 'মাইক্রোফোন পাওয়া যায়নি। মাইক্রোফোন চেক করুন।';
+                        break;
+                    case 'no-speech':
+                        errorMessage = 'কোনো কথা শোনা যায়নি। আবার চেষ্টা করুন।';
+                        break;
+                }
+                
+                this.displayResponse(errorMessage, 'error');
+                this.isListening = false;
+                this.awaitingMoodResponse = false;
+                this.updateUI();
+                this.stopVisualization();
+            };
+
+            this.recognition.onnomatch = () => {
+                console.log('No speech recognized');
+                this.displayResponse('কোনো কথা শোনা যায়নি। দয়া করে আবার চেষ্টা করুন।', 'error');
+            };
+        }
+
+        setupEventListeners() {
+            const micButton = document.getElementById('micButton');
+            const suggestionChips = document.querySelectorAll('.chip');
+
+            micButton.addEventListener('click', () => {
+                this.toggleListening();
+            });
+
+            suggestionChips.forEach(chip => {
+                chip.addEventListener('click', (e) => {
+                    const command = e.target.getAttribute('data-command');
+                    this.processCommand(command);
+                });
+            });
+
+            // Add keyboard shortcut (Spacebar)
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && !e.target.matches('input, textarea')) {
+                    e.preventDefault();
+                    this.toggleListening();
+                }
+            });
+
+            // Handle page visibility changes
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && this.isListening) {
+                    this.recognition.stop();
+                }
+            });
+        }
+
+        async toggleListening() {
+            if (!this.supported) {
+                this.showError('ভয়েস রিকগনিশন সাপোর্ট করে না। Chrome ব্রাউজার ব্যবহার করুন।');
+                return;
+            }
+
+            if (this.isListening) {
+                this.recognition.stop();
+            } else {
+                try {
+                    // Request microphone permission first
+                    await this.requestMicrophonePermission();
+                    this.recognition.start();
+                } catch (error) {
+                    console.error('Failed to start recognition:', error);
+                    this.showError('মাইক্রোফোন এক্সেস দেওয়া হয়নি। ব্রাউজার পারমিশন চেক করুন।');
+                }
+            }
+        }
+
+        async requestMicrophonePermission() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                // Stop the stream immediately since we just needed permission
+                stream.getTracks().forEach(track => track.stop());
+                this.hidePermissionHelp();
+                return true;
+            } catch (error) {
+                console.error('Microphone permission denied:', error);
+                this.showPermissionHelp();
+                throw error;
+            }
+        }
+
+        async processCommand(command) {
+            this.displayCommand(command);
+            
+            try {
+                const response = await fetch('/process-command/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': this.getCSRFToken()
+                    },
+                    body: JSON.stringify({ command: command })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                this.displayResponse(data.message, data.type);
+                this.speakResponse(data.speech, data.language);
+
+                if (data.awaiting_mood) {
+                    this.awaitingMoodResponse = true;
+                    this.displayResponse('আমি শুনছি... আপনার অনুভূতি বলুন।', 'mood_prompt');
+                }
+                
+            } catch (error) {
+                console.error('Error processing command:', error);
+                this.displayResponse('দুঃখিত, সার্ভারে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
+            }
+        }
+
+        async processMoodResponse(moodText) {
+            try {
+                const response = await fetch('/process-mood/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': this.getCSRFToken()
+                    },
+                    body: JSON.stringify({ 
+                        mood_text: moodText,
+                        language: 'bn'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                this.displayResponse(data.message, 'mood_response');
+                this.speakResponse(data.speech, data.language);
+                
+            } catch (error) {
+                console.error('Error processing mood response:', error);
+                this.displayResponse('দুঃখিত, আপনার অনুভূতি বুঝতে পারিনি।', 'error');
+            } finally {
+                this.awaitingMoodResponse = false;
+            }
+        }
+
+        displayCommand(command) {
+            const commandElement = document.getElementById('commandText');
+            commandElement.textContent = `আপনি বলেছেন: "${command}"`;
+            commandElement.style.color = '#2d3748';
+            commandElement.classList.add('fade-in');
+            
+            setTimeout(() => {
+                commandElement.classList.remove('fade-in');
+            }, 500);
+        }
+
+        displayResponse(message, type) {
+            const responseElement = document.getElementById('responseText');
+            responseElement.textContent = message;
+            responseElement.classList.add('fade-in');
+            
+            // Reset styles
+            responseElement.style.cssText = '';
+            responseElement.className = 'response-text';
+            
+            // Apply type-specific styles
+            switch(type) {
+                case 'error':
+                    responseElement.style.color = '#e53e3e';
+                    responseElement.style.borderLeftColor = '#e53e3e';
+                    responseElement.style.fontWeight = 'bold';
+                    break;
+                case 'mood_response':
+                case 'mood_prompt':
+                    responseElement.style.color = '#805ad5';
+                    responseElement.style.borderLeftColor = '#805ad5';
+                    break;
+                case 'emergency':
+                    responseElement.style.color = '#e53e3e';
+                    responseElement.style.borderLeftColor = '#e53e3e';
+                    responseElement.style.fontWeight = 'bold';
+                    responseElement.style.background = '#fed7d7';
+                    break;
+                default:
+                    responseElement.style.color = '#2d3748';
+                    responseElement.style.borderLeftColor = '#667eea';
+            }
+
+            setTimeout(() => {
+                responseElement.classList.remove('fade-in');
+            }, 500);
+        }
+
+        speakResponse(text, language) {
+            if (!this.synthesis) {
+                console.warn('Speech synthesis not supported');
+                return;
+            }
+
+            // Cancel any ongoing speech
+            this.synthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            
+            // Configure utterance
+            if (language === 'bn' || language === 'mixed') {
+                utterance.lang = 'bn-BD';
+                utterance.rate = 0.8; // Slower for Bengali
+            } else {
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+            }
+
+            utterance.pitch = 1;
+            utterance.volume = 1;
+
+            // Try to find appropriate voice
+            const voices = this.synthesis.getVoices();
+            const preferredVoice = voices.find(voice => 
+                voice.lang.includes('bn') || voice.lang.includes('BD') || voice.lang.includes('IN')
+            );
+            
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
+            utterance.onend = () => {
+                console.log('Speech synthesis completed');
+            };
+
+            utterance.onerror = (event) => {
+                console.error('Speech synthesis error:', event);
+            };
+
+            this.synthesis.speak(utterance);
+        }
+
+        updateUI() {
+            const micButton = document.getElementById('micButton');
+            const micText = micButton.querySelector('.mic-text');
+            const statusElement = document.getElementById('statusText');
+            
+            if (this.isListening) {
+                micButton.classList.add('listening');
+                micText.textContent = 'শুনছি...';
+                statusElement.textContent = 'কথা বলুন... আমি শুনছি';
+                statusElement.style.color = '#e53e3e';
+                statusElement.style.fontWeight = 'bold';
+                
+                // Add listening animation
+                if (!micButton.querySelector('.listening-animation')) {
+                    const animation = document.createElement('div');
+                    animation.className = 'listening-animation';
+                    micButton.appendChild(animation);
+                }
+            } else {
+                micButton.classList.remove('listening');
+                micText.textContent = 'কথা বলুন';
+                
+                // Remove listening animation
+                const animation = micButton.querySelector('.listening-animation');
+                if (animation) {
+                    animation.remove();
+                }
+                
+                if (this.awaitingMoodResponse) {
+                    statusElement.textContent = 'আপনার অনুভূতি শুনছি... বলুন আপনি কেমন আছেন';
+                    statusElement.style.color = '#805ad5';
+                } else {
+                    statusElement.textContent = 'মাইক্রোফোন বাটন চাপুন বা স্পেসবার প্রেস করুন';
+                    statusElement.style.color = '#4a5568';
+                }
+                statusElement.style.fontWeight = 'normal';
+            }
+        }
+
+        startVisualization() {
+            const bars = document.querySelectorAll('.visualizer .bar');
+            bars.forEach((bar, index) => {
+                bar.style.animation = `equalize ${0.5 + index * 0.1}s infinite ease-in-out`;
+                bar.style.animationDelay = `${index * 0.1}s`;
+            });
+        }
+
+        stopVisualization() {
+            const bars = document.querySelectorAll('.visualizer .bar');
+            bars.forEach(bar => {
+                bar.style.animation = 'none';
+                bar.style.height = '20px';
+            });
+        }
+
+        showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            errorElement.classList.add('fade-in');
+        }
+
+        hideError() {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.style.display = 'none';
+        }
+
+        showPermissionHelp() {
+            const helpElement = document.getElementById('permissionHelp');
+            helpElement.style.display = 'block';
+        }
+
+        hidePermissionHelp() {
+            const helpElement = document.getElementById('permissionHelp');
+            helpElement.style.display = 'none';
+        }
+
+        getCSRFToken() {
+            const name = 'csrftoken';
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
                     }
-                } else if (data.error) {
-                    appendToChat('মনবন্ধু', data.error);
-                    speak(data.error);
                 }
-            })
-            .catch(err => {
-                if (thinking && thinking.parentNode) thinking.parentNode.removeChild(thinking);
-                appendToChat('মনবন্ধু', 'একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।');
-                speak('একটি সমস্যা হয়েছে, আবার চেষ্টা করুন।');
-            });
+            }
+            return cookieValue;
+        }
     }
 
-    function postMood(moodKey, notes) {
-        const fd = new FormData();
-        fd.append('mood', moodKey);
-        fd.append('notes', notes || '');
-        fd.append('csrfmiddlewaretoken', csrftoken);
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        // Load voices for speech synthesis
+        if (window.speechSynthesis) {
+            // Chrome loads voices asynchronously
+            speechSynthesis.onvoiceschanged = () => {
+                console.log('Voices loaded:', speechSynthesis.getVoices().length);
+            };
+            
+            // Try to get voices immediately
+            setTimeout(() => {
+                const voices = speechSynthesis.getVoices();
+                console.log('Available voices:', voices);
+            }, 1000);
+        }
 
-        fetch('/mood-tracker/', { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-            .then(r => r.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    // success UI handled in voice flow
-                }
-            })
-            .catch(e => {
-                console.error('Failed posting mood', e);
-            });
-    }
+        // Initialize voice assistant
+        window.voiceAssistant = new VoiceAssistant();
+        
+        console.log('Voice Assistant initialized. Supported:', window.voiceAssistant.supported);
+    });
 
-    function mapMoodFromText(text) {
-        const t = text.toLowerCase();
-        if (t.includes('খুব ভালো') || t.includes('ভালো')) return 'happy';
-        if (t.includes('ঠিক') || t.includes('ঠিক আছে')) return 'neutral';
-        if (t.includes('খারাপ')) return 'sad';
-        if (t.includes('চিন্ত') || t.includes('চিন্তিত') || t.includes('চিন্তা')) return 'anxious';
-        if (t.includes('রাগ')) return 'angry';
-        return null;
-    }
-
-    function escapeHtml(unsafe) {
-        return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/\"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-})();
+    // Handle page unload
+    window.addEventListener('beforeunload', () => {
+        if (window.voiceAssistant && window.voiceAssistant.isListening) {
+            window.voiceAssistant.recognition.stop();
+        }
+    });
 </script>
-
 {% endblock %}
