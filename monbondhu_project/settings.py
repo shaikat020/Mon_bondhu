@@ -137,3 +137,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = "Mon_Bondhu <your_email@gmail.com>"
+
+OPENAI_API__KEY = os.getenv('OPENAI_API_KEY')

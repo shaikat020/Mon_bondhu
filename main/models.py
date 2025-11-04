@@ -157,3 +157,28 @@ class OpenRouterChat(models.Model):
 
     def __str__(self):
         return f"Chat {self.id}"
+
+class HealthTip(models.Model):
+    LANGUAGE_CHOICES = [
+        ('bn', 'Bengali'),
+        ('en', 'English'),
+    ]
+    
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, default='bn')
+    audio_file = models.FileField(upload_to='health_tips/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class Hospital(models.Model):
+    name = models.CharField(max_length=200)
+    address = models.TextField()
+    phone = models.CharField(max_length=15, blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+
+class VoiceCommand(models.Model):
+    command_text = models.CharField(max_length=500)
+    language = models.CharField(max_length=10)
+    response_type = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
