@@ -45,6 +45,33 @@
             <button type="submit" class="btn" style="background: #667eea; color: white;">জমা দিন</button>
         </form>
     </div>
+    {% if recent_moods %}
+    <div style="background: white; padding: 2rem; border-radius: 15px;">
+        <h3 style="color: #4a5568; margin-bottom: 1rem;">আপনার সাম্প্রতিক মুড লগ</h3>
+        <div style="display: grid; gap: 1rem;">
+            {% for mood in recent_moods %}
+            <div style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 1.5rem;">
+                        {% if mood.mood == 'happy' %}😊
+                        {% elif mood.mood == 'neutral' %}😐
+                        {% elif mood.mood == 'sad' %}😔
+                        {% elif mood.mood == 'anxious' %}😰
+                        {% elif mood.mood == 'angry' %}😠
+                        {% endif %}
+                    </span>
+                    <span style="color: #718096; font-size: 0.9rem;">{{ mood.created_at|date:"d M Y" }}</span>
+                </div>
+                {% if mood.notes %}
+                <p style="margin-top: 0.5rem; color: #4a5568;">{{ mood.notes }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    </div>
+    </div>
     
     <!-- Chat helper for people who need a safe space to say "I'm not okay" -->
     <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
@@ -76,33 +103,7 @@
 
     <div id="moodMessage" style="display: none; background: #48bb78; color: white; padding: 1rem; border-radius: 10px; margin: 1rem 0; text-align: center;"></div>
     
-    {% if recent_moods %}
-    <div style="background: white; padding: 2rem; border-radius: 15px;">
-        <h3 style="color: #4a5568; margin-bottom: 1rem;">আপনার সাম্প্রতিক মুড লগ</h3>
-        <div style="display: grid; gap: 1rem;">
-            {% for mood in recent_moods %}
-            <div style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 10px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 1.5rem;">
-                        {% if mood.mood == 'happy' %}😊
-                        {% elif mood.mood == 'neutral' %}😐
-                        {% elif mood.mood == 'sad' %}😔
-                        {% elif mood.mood == 'anxious' %}😰
-                        {% elif mood.mood == 'angry' %}😠
-                        {% endif %}
-                    </span>
-                    <span style="color: #718096; font-size: 0.9rem;">{{ mood.created_at|date:"d M Y" }}</span>
-                </div>
-                {% if mood.notes %}
-                <p style="margin-top: 0.5rem; color: #4a5568;">{{ mood.notes }}</p>
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-    </div>
-    </div>
+    
 </main>
 
 <script>
