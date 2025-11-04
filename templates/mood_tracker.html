@@ -184,6 +184,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 formData.append('csrfmiddlewaretoken', csrfToken.value);
             }
 
+            // Show thinking indicator and disable input/button while waiting
+            const submitBtn = chatForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            input.disabled = true;
+
+            const thinking = document.createElement('div');
+            thinking.style.marginBottom = '0.75rem';
+            thinking.style.opacity = '0.9';
+            thinking.innerHTML = `<div style="font-weight:600; color:#2d3748;">মনবন্ধু ভাবছে...</div><div style="margin-left:0.5rem; color:#718096;">অপেক্ষা করুন...</div>`;
+            thinking.className = 'thinking-indicator';
+            chatBox.appendChild(thinking);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
             fetch('{% url "mood_send_message" %}', {
                 method: 'POST',
                 body: formData,
@@ -191,6 +204,9 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(r => r.json())
             .then(data => {
+                // remove thinking indicator
+                if (thinking && thinking.parentNode) thinking.parentNode.removeChild(thinking);
+
                 if (data.response) {
                     // append to chatBox
                     const container = document.createElement('div');
@@ -211,9 +227,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(err => {
+                // remove thinking indicator
+                if (thinking && thinking.parentNode) thinking.parentNode.removeChild(thinking);
                 chatFeedback.textContent = 'একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।';
                 chatFeedback.style.display = 'block';
                 chatFeedback.style.background = '#f56565';
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                input.disabled = false;
             });
         });
     }

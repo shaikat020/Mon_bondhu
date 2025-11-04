@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+        <h2 style="color: #4a5568; margin-bottom: 1rem;">ভয়েস-ফার্স্ট হেলথ অ্যাসিস্ট্যান্ট</h2>
+        <p style="color:#718096;">আপনি বাংলা বলে নির্দেশ দিন। অ্যাপ শুনবে এবং কণ্ঠে উত্তর দেবে। (ব্রাউজারের Web Speech API ব্যবহার করে)</p>
+
+        <div style="display:flex; gap:0.5rem; align-items:center; margin-bottom:1rem;">
+            <button id="startBtn" class="btn" style="background:#667eea; color:white;">শুরু করুন</button>
+            <button id="stopBtn" class="btn" style="background:#a0aec0; color:white;">বন্ধ করুন</button>
+            <div id="status" style="color:#718096; margin-left:1rem;">প্রস্তুত</div>
+        </div>
+
+        <div id="transcript" style="min-height:2rem; padding:1rem; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:1rem; color:#2d3748;"></div>
+
+        <div id="chatBox" style="max-height:300px; overflow:auto; border:1px solid #e2e8f0; padding:1rem; border-radius:10px; margin-bottom:1rem;">
+            <div style="color:#718096;">আসা উত্তর এখানে শোনানো হবে এবং প্রদর্শিত হবে।</div>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+            <h4 style="margin-bottom:0.5rem; color:#4a5568;">কিছপা স্বাস্থ্য টিপ (অফলাইন)</h4>
+            <ul>
+                {% for tip in cached_tips %}
+                <li style="color:#2d3748;">{{ tip }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function(){
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const status = document.getElementById('status');
+    const transcriptEl = document.getElementById('transcript');
+    const chatBox = document.getElementById('chatBox');
+
+    const csrftoken = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value || '';
+
+    // SpeechRecognition setup
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        status.textContent = 'আপনার ব্রাউজার SpeechRecognition সমর্থন করে না।';
+        startBtn.disabled = true;
+        stopBtn.disabled = true;
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'bn-BD'; // Bangla (Bangladesh) if available
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    let expectMood = false;
+
+    recognition.addEventListener('start', () => {
+        status.textContent = 'শুনছি... কথা বলুন';
+    });
+
+    recognition.addEventListener('end', () => {
+        status.textContent = 'শুনা শেষ';
+    });
+
+    recognition.addEventListener('result', (e) => {
+        const text = Array.from(e.results).map(r => r[0].transcript).join('\n');
+        transcriptEl.textContent = text;
+
+        if (expectMood) {
+            // map speech to mood and POST to mood tracker
+            const moodKey = mapMoodFromText(text);
+            if (moodKey) {
+                postMood(moodKey, 'ভয়েস ইনপুট');
+                expectMood = false;
+                appendToChat('আপনি', text);
+                appendToChat('মনবন্ধু', 'আপনার মুড রেকর্ড করা হয়েছে।');
+                speak('আপনার মুড রেকর্ড করা হয়েছে।');
+            } else {
+                appendToChat('মনবন্ধু', 'আমি আপনার মুড বুঝতে পারিনি। অনুগ্রহ করে আবার বলুন: খুব ভালো, ঠিক আছে, কিছুটা খারাপ, চিন্তিত, বা রাগান্বিত।');
+                speak('আমি আপনার মুড বুঝতে পারিনি, অনুগ্রহ করে আবার বলুন।');
+            }
+            return;
+        }
+
+        // Normal flow: send recognized text to server for processing
+        appendToChat('আপনি', text);
+        sendCommand(text);
+    });
+
+    startBtn.addEventListener('click', () => {
+        try { recognition.start(); } catch (e) { /* ignore */ }
+    });
+    stopBtn.addEventListener('click', () => recognition.stop());
+
+    function appendToChat(who, message) {
+        const container = document.createElement('div');
+        container.style.marginBottom = '0.75rem';
+        container.innerHTML = `<div style="font-weight:600; color:#2d3748;">${who}:</div><div style="margin-left:0.5rem; color:#4a5568;">${escapeHtml(message)}</div>`;
+        chatBox.appendChild(container);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function speak(text) {
+        if (!window.speechSynthesis) return;
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'bn-BD';
+        // try to set a Bengali voice if available
+        const voices = window.speechSynthesis.getVoices();
+        const bnVoice = voices.find(v => v.lang && v.lang.startsWith('bn')) || voices.find(v => v.name && v.name.toLowerCase().includes('bengali'));
+        if (bnVoice) utter.voice = bnVoice;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utter);
+    }
+
+    function sendCommand(command) {
+        // show thinking
+        const thinking = document.createElement('div');
+        thinking.style.marginBottom = '0.75rem';
+        thinking.style.opacity = '0.9';
+        thinking.innerHTML = `<div style="font-weight:600; color:#2d3748;">মনবন্ধু ভাবছে...</div><div style="margin-left:0.5rem; color:#718096;">অপেক্ষা করুন...</div>`;
+        thinking.className = 'thinking-indicator';
+        chatBox.appendChild(thinking);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        const formData = new FormData();
+        formData.append('command', command);
+        formData.append('csrfmiddlewaretoken', csrftoken);
+
+        fetch('{% url "voice_send_command" %}', { method: 'POST', body: formData, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(r => r.json())
+            .then(data => {
+                if (thinking && thinking.parentNode) thinking.parentNode.removeChild(thinking);
+                if (data.response) {
+                    appendToChat('মনবন্ধু', data.response);
+                    speak(data.response);
+                    if (data.action === 'expect_mood') {
+                        // next recognition should capture mood
+                        expectMood = true;
+                        // start listening for mood answer automatically
+                        try { recognition.start(); } catch (e) { /* ignore */ }
+                    }
+                } else if (data.error) {
+                    appendToChat('মনবন্ধু', data.error);
+                    speak(data.error);
+                }
+            })
+            .catch(err => {
+                if (thinking && thinking.parentNode) thinking.parentNode.removeChild(thinking);
+                appendToChat('মনবন্ধু', 'একটি সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                speak('একটি সমস্যা হয়েছে, আবার চেষ্টা করুন।');
+            });
+    }
+
+    function postMood(moodKey, notes) {
+        const fd = new FormData();
+        fd.append('mood', moodKey);
+        fd.append('notes', notes || '');
+        fd.append('csrfmiddlewaretoken', csrftoken);
+
+        fetch('/mood-tracker/', { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // success UI handled in voice flow
+                }
+            })
+            .catch(e => {
+                console.error('Failed posting mood', e);
+            });
+    }
+
+    function mapMoodFromText(text) {
+        const t = text.toLowerCase();
+        if (t.includes('খুব ভালো') || t.includes('ভালো')) return 'happy';
+        if (t.includes('ঠিক') || t.includes('ঠিক আছে')) return 'neutral';
+        if (t.includes('খারাপ')) return 'sad';
+        if (t.includes('চিন্ত') || t.includes('চিন্তিত') || t.includes('চিন্তা')) return 'anxious';
+        if (t.includes('রাগ')) return 'angry';
+        return null;
+    }
+
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/\"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+})();
+</script>
+
+{% endblock %}
