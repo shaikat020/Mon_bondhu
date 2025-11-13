@@ -3,9 +3,9 @@
 {% block content %}
 <main class="container mx-auto px-4 py-8">
     <div class="glass-morphism p-8 rounded-3xl">
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0; max-width: 800px; margin-left: auto; margin-right: auto;">
-        <h2 style="color: #4a5568; margin-bottom: 1rem;">গোপন সাহায্য অনুরোধ</h2>
-        <p style="color: #718096; margin-bottom: 2rem;">আপনার পরিচয় গোপন রেখে সাহায্য চান। আপনার কোন ব্যক্তিগত তথ্য সংগ্রহ করা হবে না।</p>
+    <div class="content-card">
+        <h2 class="section-title">গোপন সাহায্য অনুরোধ</h2>
+        <p class="section-description">আপনার পরিচয় গোপন রেখে সাহায্য চান। আপনার কোন ব্যক্তিগত তথ্য সংগ্রহ করা হবে না।</p>
         
         <div style="background: #e6fffa; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; border-left: 4px solid #38b2ac;">
             <h4 style="color: #234e52; margin-bottom: 0.5rem;">🔒 আপনার গোপনীয়তা সুরক্ষিত</h4>
@@ -70,8 +70,8 @@
     </div>
 
     <!-- What Happens Next -->
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0; max-width: 800px; margin-left: auto; margin-right: auto;">
-        <h3 style="color: #4a5568; margin-bottom: 1rem;">এরপর কী হবে?</h3>
+    <div class="content-card">
+        <h3 class="section-title">এরপর কী হবে?</h3>
         <div style="display: grid; gap: 1.5rem;">
             <div style="display: flex; gap: 1rem; align-items: start;">
                 <div style="background: #667eea; color: white; width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
@@ -164,4 +164,134 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<style>
+/* Base styles and dark mode enhancements */
+.content-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.3s ease;
+}
+
+.section-title {
+    color: #4a5568;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.section-description {
+    color: #718096;
+    margin-bottom: 2rem;
+    transition: color 0.3s ease;
+}
+
+/* Dark mode styles */
+body.dark-mode .content-card {
+    background: #1a202c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .section-title {
+    color: #f7fafc;
+}
+
+body.dark-mode .section-description {
+    color: #e2e8f0;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #f7fafc;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    background: #2d3748;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #a0aec0;
+}
+
+body.dark-mode select option {
+    background: #2d3748;
+    color: #f7fafc;
+}
+
+/* Privacy info section dark mode */
+body.dark-mode div[style*="background: #e6fffa"] {
+    background: #234e52 !important;
+    border-left: 4px solid #38b2ac;
+}
+
+body.dark-mode div[style*="background: #e6fffa"] h4,
+body.dark-mode div[style*="background: #e6fffa"] p {
+    color: #e6fffa !important;
+}
+
+/* Consent section dark mode */
+body.dark-mode div[style*="background: #fff3cd"] {
+    background: #744210 !important;
+    border: 1px solid #d69e2e;
+}
+
+body.dark-mode div[style*="background: #fff3cd"] span {
+    color: #fefcbf !important;
+}
+
+/* Form labels dark mode */
+body.dark-mode label {
+    color: #e2e8f0 !important;
+}
+
+/* Steps section dark mode */
+body.dark-mode h4[style*="color: #2d3748"] {
+    color: #f7fafc !important;
+}
+
+body.dark-mode p[style*="color: #718096"] {
+    color: #e2e8f0 !important;
+}
+
+/* Response message dark mode */
+body.dark-mode #responseMessage {
+    background: #234e52 !important;
+    color: #e6fffa !important;
+}
+
+body.dark-mode #responseMessage[style*="background: #fed7d7"] {
+    background: #742a2a !important;
+    color: #fed7d7 !important;
+}
+
+/* Step numbers dark mode enhancement */
+body.dark-mode div[style*="background: #667eea"] {
+    background: #4c51bf !important;
+    box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+}
+
+/* Submit button dark mode hover */
+body.dark-mode button[type="submit"] {
+    background: #4c51bf !important;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode button[type="submit"]:hover {
+    background: #434190 !important;
+    box-shadow: 0 0 15px rgba(76, 81, 191, 0.3);
+}
+</style>
 {% endblock %}

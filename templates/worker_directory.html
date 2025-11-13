@@ -3,12 +3,12 @@
 {% block content %}
 <main class="container mx-auto px-4 py-8">
     <div class="glass-morphism p-8 rounded-3xl">
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+    <div class="content-card" style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
         <h2 style="color: #4a5568; margin-bottom: 1rem;">👨‍⚕️ স্বাস্থ্যকর্মী ডিরেক্টরি</h2>
         <p style="color: #718096; margin-bottom: 2rem;">আপনার এলাকার প্রশিক্ষিত স্বাস্থ্যকর্মী ও কমিউনিটি স্বাস্থ্য সহায়কদের খুঁজুন</p>
         
         <!-- Search and Filters -->
-        <div style="background: #f7fafc; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+        <div class="search-container" style="background: #f7fafc; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
             <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 1rem; margin-bottom: 1rem;">
                 <input type="text" id="searchWorkers" placeholder="নাম, গ্রাম বা ইউনিয়ন খুঁজুন..." 
                        style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
@@ -50,7 +50,7 @@
     </div>
 
     <!-- Important Information -->
-    <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 10px; margin: 2rem 0;">
+    <div class="info-box" style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 10px; margin: 2rem 0;">
         <h4 style="color: #856404; margin-bottom: 1rem;">💡 গুরুত্বপূর্ণ তথ্য</h4>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
             <div>
@@ -75,7 +75,7 @@
     </div>
 
     <!-- Add Worker Form (For demonstration) -->
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+    <div class="form-card" style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
         <h3 style="color: #4a5568; margin-bottom: 1rem;">স্বাস্থ্যকর্মী যোগ করুন</h3>
         <p style="color: #718096; margin-bottom: 2rem;">নতুন স্বাস্থ্যকর্মীর তথ্য যোগ করুন (ডেমো উদ্দেশ্যে)</p>
         
@@ -185,6 +185,32 @@
 </div>
 
 <style>
+/* Base styles */
+.content-card, .form-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    transition: all 0.3s ease;
+}
+
+.search-container {
+    background: #f7fafc;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+}
+
+.info-box {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin: 2rem 0;
+    transition: all 0.3s ease;
+}
+
 .filter-btn {
     padding: 0.5rem 1rem;
     border: 2px solid #e2e8f0;
@@ -200,6 +226,194 @@
     color: white;
     border-color: #667eea;
 }
+
+/* Dark mode - Content cards */
+body.dark-mode .content-card,
+body.dark-mode .form-card {
+    background: #1a202c !important;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #e5e7eb;
+}
+
+body.dark-mode .search-container {
+    background: #2d3748 !important;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+body.dark-mode .info-box {
+    background: #422006 !important;
+    border-color: #92400e !important;
+}
+
+/* Dark mode - Headings with high contrast */
+body.dark-mode h2[style*="color: #4a5568"],
+body.dark-mode h3[style*="color: #4a5568"] {
+    color: #f9fafb !important;
+}
+
+body.dark-mode .info-box h4,
+body.dark-mode .info-box h5 {
+    color: #fde68a !important;
+}
+
+/* Dark mode - Paragraphs and text */
+body.dark-mode p[style*="color: #718096"],
+body.dark-mode p[style*="color: #4a5568"] {
+    color: #d1d5db !important;
+}
+
+body.dark-mode .info-box p,
+body.dark-mode .info-box li {
+    color: #fef3c7 !important;
+}
+
+/* Dark mode - Inputs and selects */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="tel"],
+body.dark-mode select {
+    background: #111827 !important;
+    border-color: #374151 !important;
+    color: #f9fafb !important;
+}
+
+body.dark-mode input::placeholder {
+    color: #9ca3af !important;
+}
+
+body.dark-mode select option {
+    background: #1f2937;
+    color: #f9fafb;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.2) !important;
+}
+
+/* Dark mode - Filter buttons */
+body.dark-mode .filter-btn {
+    background: #1f2937;
+    border-color: #374151;
+    color: #e5e7eb;
+}
+
+body.dark-mode .filter-btn:hover {
+    background: #374151;
+    border-color: #4b5563;
+}
+
+body.dark-mode .filter-btn.active {
+    background: #4f46e5 !important;
+    border-color: #4f46e5 !important;
+    color: white !important;
+}
+
+/* Dark mode - Worker cards */
+body.dark-mode .worker-card {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #e5e7eb;
+}
+
+body.dark-mode .worker-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+    border-color: #6366f1 !important;
+}
+
+body.dark-mode .worker-card.verified {
+    background: #064e3b !important;
+    border-left-color: #10b981 !important;
+}
+
+body.dark-mode .worker-card h3[style*="color: #2d3748"] {
+    color: #f9fafb !important;
+}
+
+body.dark-mode .worker-card div[style*="color: #718096"] {
+    color: #cbd5e1 !important;
+}
+
+body.dark-mode .worker-card strong[style*="color: #4a5568"] {
+    color: #e5e7eb !important;
+}
+
+/* Dark mode - Skill badges with vibrant colors */
+body.dark-mode .skill-badge {
+    background: #1e293b;
+    color: #cbd5e1;
+}
+
+body.dark-mode .skill-mental_health {
+    background: #4c1d95 !important;
+    color: #e9d5ff !important;
+}
+
+body.dark-mode .skill-first_aid {
+    background: #991b1b !important;
+    color: #fecaca !important;
+}
+
+body.dark-mode .skill-maternal_health {
+    background: #9f1239 !important;
+    color: #fecdd3 !important;
+}
+
+body.dark-mode .skill-child_health {
+    background: #065f46 !important;
+    color: #a7f3d0 !important;
+}
+
+body.dark-mode .skill-chronic_disease {
+    background: #92400e !important;
+    color: #fde68a !important;
+}
+
+body.dark-mode .skill-vaccination {
+    background: #075985 !important;
+    color: #bae6fd !important;
+}
+
+body.dark-mode .skill-health_education {
+    background: #0f766e !important;
+    color: #99f6e4 !important;
+}
+
+/* Dark mode - Status badges */
+body.dark-mode .verified-badge {
+    background: #16a34a !important;
+    color: #f0fdf4 !important;
+    box-shadow: 0 0 10px rgba(34,197,94,0.3);
+}
+
+body.dark-mode .available-badge {
+    background: #ea580c !important;
+    color: #fff7ed !important;
+    box-shadow: 0 0 10px rgba(234,88,12,0.3);
+}
+
+/* Dark mode - Labels and checkboxes */
+body.dark-mode label {
+    color: #d1d5db;
+}
+
+body.dark-mode label[style*="color: #4a5568"] {
+    color: #e5e7eb !important;
+}
+
+/* Dark mode - No workers message */
+body.dark-mode #noWorkers {
+    color: #9ca3af !important;
+}
+
+body.dark-mode #noWorkers h3 {
+    color: #d1d5db !important;
+}
+
+body.dark-mode #noWorkers p {
+    color: #9ca3af !important;
+}
+
 
 .worker-card {
     background: white;

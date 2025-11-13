@@ -3,8 +3,8 @@
 {% block content %}
 <main class="container mx-auto px-4 py-8">
     <div class="glass-morphism p-8 rounded-3xl">
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-.        <h2 class="mb-heading-black" style="margin-bottom: 2rem;">আপনার আজকের অনুভূতি কেমন?</h2>
+    <div class="content-card">
+        <h2 class="section-title">আপনার আজকের অনুভূতি কেমন?</h2>
 
         <form id="moodForm" method="POST">
             {% csrf_token %}
@@ -51,8 +51,8 @@
         </form>
     </div>
     {% if recent_moods %}
-    <div style="background: white; padding: 2rem; border-radius: 15px;">
-        <h3 style="color: #4a5568; margin-bottom: 1rem;">আপনার সাম্প্রতিক মুড লগ</h3>
+    <div class="content-card">
+        <h3 class="section-title">আপনার সাম্প্রতিক মুড লগ</h3>
         <div style="display: grid; gap: 1rem;">
             {% for mood in recent_moods %}
             <div style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 10px;">
@@ -79,8 +79,8 @@
     </div>
     
     <!-- Chat helper for people who need a safe space to say "I'm not okay" -->
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-        <h2 style="color: #4a5568; margin-bottom: 1rem;">কিছু বলতে চান? — মনবন্ধু এখানে শোনে</h2>
+    <div class="content-card">
+        <h2 class="section-title">কিছু বলতে চান? — মনবন্ধু এখানে শোনে</h2>
 
         <div id="chatBox" style="max-height: 300px; overflow:auto; border:1px solid #e2e8f0; padding:1rem; border-radius:10px; margin-bottom:1rem;">
             {% if chat_history %}
@@ -110,6 +110,126 @@
     
     
 </main>
+
+<style>
+/* Base styles and dark mode enhancements */
+.content-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    transition: all 0.3s ease;
+}
+
+.section-title {
+    color: #4a5568;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+/* Dark mode styles */
+body.dark-mode .content-card {
+    background: #1a202c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .section-title {
+    color: #f7fafc;
+}
+
+/* Mood selection cards dark mode */
+body.dark-mode label[style*="text-align: center"] {
+    background: #2d3748;
+    border-color: #4a5568;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode label[style*="text-align: center"]:hover {
+    border-color: #667eea;
+    background: #2d3748;
+}
+
+body.dark-mode label[style*="text-align: center"] div:not([style*="font-size: 2rem"]) {
+    color: #f7fafc !important;
+}
+
+/* Text input dark mode */
+body.dark-mode textarea {
+    background: #2d3748 !important;
+    border-color: #4a5568 !important;
+    color: #f7fafc !important;
+}
+
+body.dark-mode textarea::placeholder {
+    color: #a0aec0;
+}
+
+body.dark-mode textarea:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+/* Mood logs dark mode */
+body.dark-mode div[style*="border: 1px solid #e2e8f0"] {
+    background: #2d3748;
+    border-color: #4a5568 !important;
+}
+
+body.dark-mode span[style*="color: #718096"] {
+    color: #a0aec0 !important;
+}
+
+body.dark-mode p[style*="color: #4a5568"] {
+    color: #e2e8f0 !important;
+}
+
+/* Chat box dark mode */
+body.dark-mode #chatBox {
+    background: #2d3748;
+    border-color: #4a5568;
+}
+
+body.dark-mode #chatBox div[style*="color:#2d3748"] {
+    color: #f7fafc !important;
+}
+
+body.dark-mode #chatBox div[style*="color:#4a5568"],
+body.dark-mode #chatBox div[style*="color:#718096"] {
+    color: #e2e8f0 !important;
+}
+
+/* Button styles dark mode */
+body.dark-mode .btn[style*="background: #667eea"] {
+    background: #4c51bf !important;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .btn[style*="background: #667eea"]:hover {
+    background: #434190 !important;
+    box-shadow: 0 0 15px rgba(76, 81, 191, 0.3);
+}
+
+/* Messages dark mode */
+body.dark-mode #moodMessage[style*="background: #48bb78"] {
+    background: #276749 !important;
+}
+
+body.dark-mode #chatFeedback[style*="background: #48bb78"] {
+    background: #276749 !important;
+}
+
+body.dark-mode #moodMessage[style*="background: #f56565"],
+body.dark-mode #chatFeedback[style*="background: #f56565"] {
+    background: #9b2c2c !important;
+}
+
+/* Selected mood state dark mode */
+body.dark-mode label[style*="border-color: #667eea"] {
+    border-color: #4c51bf !important;
+    background: #2d3748 !important;
+}
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

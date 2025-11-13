@@ -187,6 +187,64 @@
 .badge-blood_donation { background: #fed7d7; color: #c53030; }
 </style>
 
+/* Dark-mode overrides: increase contrast for health events page */
+<style>
+/* Override common inline white backgrounds and form controls */
+body.dark-mode div[style*="background: white"] {
+    background: #071127 !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    color: #e6eef6 !important;
+}
+
+body.dark-mode div[style*="background: #f7fafc"] {
+    background: #0b1220 !important;
+    border-color: rgba(255,255,255,0.04) !important;
+}
+
+/* Headings and paragraph overrides for inline colored styles */
+body.dark-mode h2[style*="color: #4a5568"],
+body.dark-mode h3[style*="color: #4a5568"],
+body.dark-mode p[style*="color: #718096"] {
+    color: #f8fafc !important;
+}
+
+/* Inputs, selects, textarea */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="date"],
+body.dark-mode input[type="time"],
+body.dark-mode select,
+body.dark-mode textarea {
+    background: #021223 !important;
+    color: #e6eef6 !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Filter buttons */
+body.dark-mode .filter-btn { background: #071127 !important; border-color: #243145 !important; color: #e6eef6 !important; }
+body.dark-mode .filter-btn.active, body.dark-mode .filter-btn:hover { background: #4c51bf !important; color: #fff !important; border-color: #4c51bf !important; }
+
+/* Event cards */
+body.dark-mode .event-card { background: #071127 !important; border-color: #243145 !important; color: #e6eef6 !important; }
+body.dark-mode .event-card:hover { box-shadow: 0 8px 26px rgba(2,6,23,0.6) !important; border-color: #4c51bf !important; }
+body.dark-mode .event-card.urgent { background: #3f1f21 !important; }
+body.dark-mode .event-card.upcoming { background: #07211a !important; }
+
+/* Badges */
+body.dark-mode .event-type-badge { background: rgba(255,255,255,0.04) !important; color: #e6eef6 !important; }
+body.dark-mode .badge-health_camp { background: rgba(190,227,248,0.06) !important; color: #bcdff6 !important; }
+body.dark-mode .badge-vaccination { background: rgba(198,246,213,0.04) !important; color: #a7e8c0 !important; }
+body.dark-mode .badge-screening { background: rgba(254,252,191,0.04) !important; color: #fff6c8 !important; }
+body.dark-mode .badge-awareness { background: rgba(233,216,253,0.04) !important; color: #dacdf8 !important; }
+body.dark-mode .badge-blood_donation { background: rgba(254,215,215,0.04) !important; color: #ffbcbc !important; }
+
+/* No events message */
+body.dark-mode #noEvents { color: #cbd5e1 !important; }
+body.dark-mode #noEvents h3 { color: #f8fafc !important; }
+
+/* Buttons inside cards */
+body.dark-mode .btn { background: #4c51bf !important; color: #fff !important; }
+</style>
+
 <script>
 // Sample events data
 let eventsData = [

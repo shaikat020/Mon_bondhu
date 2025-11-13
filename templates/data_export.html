@@ -3,13 +3,13 @@
 {% block content %}
 <main class="container mx-auto px-4 py-8">
     <div class="glass-morphism p-8 rounded-3xl">
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+    <div class="content-card" style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
         <h2 style="color: #4a5568; margin-bottom: 1rem;">📊 স্বাস্থ্য ডেটা এক্সপোর্ট</h2>
         <p style="color: #718096; margin-bottom: 2rem;">এনজিও ও স্বাস্থ্য বিভাগের জন্য গোপনীয়তা রক্ষা করে সামগ্রিক ডেটা এক্সপোর্ট</p>
         
         <!-- Privacy Notice -->
-        <div style="background: #e6fffa; border: 1px solid #b2f5ea; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
-            <h4 style="color: #234e52; margin-bottom: 0.5rem;">🔒 গোপনীয়তা নিশ্চিত</h4>
+        <div class="privacy-notice" style="background: #e6fffa; border: 1px solid #b2f5ea; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+            <h4 style="color: #234e52; margin-bottom: 0.5rem;">🔒 গোপনীয়তা নিশ্চিত</h4>
             <p style="color: #234e52; margin: 0;">
                 <strong>কোন ব্যক্তিগত তথ্য শেয়ার করা হয় না।</strong> শুধুমাত্র সামগ্রিক পরিসংখ্যান (Aggregated Data) 
                 এক্সপোর্ট করা হয় যা থেকে কোন ব্যক্তিকে চিহ্নিত করা সম্ভব নয়।
@@ -37,11 +37,11 @@
         </div>
 
         <!-- Export Options -->
-        <div style="background: #f7fafc; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <div class="export-options" style="background: #f7fafc; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
             <h3 style="color: #4a5568; margin-bottom: 1rem;">📤 ডেটা এক্সপোর্ট করুন</h3>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                <div style="background: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <div class="export-card" style="background: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
                     <div style="font-size: 2rem; margin-bottom: 1rem;">📊</div>
                     <h4 style="color: #2d3748; margin-bottom: 0.5rem;">সামগ্রিক পরিসংখ্যান</h4>
                     <p style="color: #718096; margin-bottom: 1rem;">মোট ব্যবহার, চেক-ইন, এবং engagement ডেটা</p>
@@ -51,7 +51,7 @@
                     </button>
                 </div>
                 
-                <div style="background: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <div class="export-card" style="background: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
                     <div style="font-size: 2rem; margin-bottom: 1rem;">🗺️</div>
                     <h4 style="color: #2d3748; margin-bottom: 0.5rem;">এলাকা ভিত্তিক ডেটা</h4>
                     <p style="color: #718096; margin-bottom: 1rem;">ইউনিয়ন ও উপজেলা ভিত্তিক সাহায্য অনুরোধ</p>
@@ -61,7 +61,7 @@
                     </button>
                 </div>
                 
-                <div style="background: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <div class="export-card" style="background: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
                     <div style="font-size: 2rem; margin-bottom: 1rem;">📈</div>
                     <h4 style="color: #2d3748; margin-bottom: 0.5rem;">ট্রেন্ড বিশ্লেষণ</h4>
                     <p style="color: #718096; margin-bottom: 1rem;">সময়ের সাথে usage patterns এবং trends</p>
@@ -73,7 +73,7 @@
             </div>
 
             <!-- Date Range Selector -->
-            <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
+            <div class="date-selector" style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;">
                 <h4 style="color: #4a5568; margin-bottom: 1rem;">📅 তারিখ range নির্বাচন করুন</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end;">
                     <div>
@@ -99,18 +99,18 @@
         </div>
 
         <!-- Data Preview -->
-        <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+        <div class="preview-card" style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
             <h3 style="color: #4a5568; margin-bottom: 1rem;">👁️ ডেটা প্রিভিউ</h3>
-            <div style="background: #f7fafc; padding: 1.5rem; border-radius: 8px; overflow-x: auto;">
-                <pre id="dataPreview" style="margin: 0; font-family: 'Courier New', monospace; font-size: 0.9rem; color: #4a5568;">
+            <div class="preview-container" style="background: #f7fafc; padding: 1.5rem; border-radius: 8px; overflow-x: auto;">
+                <pre id="dataPreview" style="margin: 0; padding: 1rem; font-family: 'Courier New', monospace; font-size: 0.9rem; color: #4a5568;">
 এক্সপোর্ট করার জন্য উপরের বাটন ক্লিক করুন...
                 </pre>
             </div>
         </div>
 
         <!-- Usage Guidelines -->
-        <div style="background: #fffaf0; border: 1px solid #feebc8; padding: 1.5rem; border-radius: 10px;">
-            <h4 style="color: #744210; margin-bottom: 1rem;">📋 ডেটা ব্যবহার গাইডলাইন</h4>
+        <div class="guidelines-box" style="background: #fffaf0; border: 1px solid #feebc8; padding: 1.5rem; border-radius: 10px;">
+            <h4 style="color: #744210; margin-bottom: 1rem;">📋 ডেটা ব্যবহার গার্ডলাইন</h4>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
                 <div>
                     <h5 style="color: #744210; margin-bottom: 0.5rem;">✅ অনুমোদিত ব্যবহার</h5>
@@ -166,6 +166,203 @@
     color: #2d3748;
     margin-bottom: 1rem;
 }
+
+/* Base styles */
+.content-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    transition: all 0.3s ease;
+}
+
+.privacy-notice, .export-options, .export-card, .date-selector, .preview-card, .guidelines-box {
+    transition: all 0.3s ease;
+}
+
+/* Dark mode - Main containers */
+body.dark-mode .content-card {
+    background: #1a202c !important;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #e5e7eb;
+}
+
+body.dark-mode .privacy-notice {
+    background: #0f3a3f !important;
+    border-color: rgba(16,185,129,0.3) !important;
+}
+
+body.dark-mode .export-options {
+    background: #1e293b !important;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+body.dark-mode .export-card,
+body.dark-mode .date-selector,
+body.dark-mode .preview-card {
+    background: #0f172a !important;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+body.dark-mode .guidelines-box {
+    background: #422006 !important;
+    border-color: #92400e !important;
+}
+
+/* Dark mode - Headings */
+body.dark-mode h2[style*="color: #4a5568"],
+body.dark-mode h3[style*="color: #4a5568"],
+body.dark-mode h4[style*="color: #4a5568"] {
+    color: #f9fafb !important;
+}
+
+body.dark-mode .privacy-notice h4 {
+    color: #6ee7b7 !important;
+}
+
+body.dark-mode .guidelines-box h4,
+body.dark-mode .guidelines-box h5 {
+    color: #fde68a !important;
+}
+
+body.dark-mode h4[style*="color: #2d3748"] {
+    color: #f9fafb !important;
+}
+
+/* Dark mode - Paragraphs and text */
+body.dark-mode p[style*="color: #718096"],
+body.dark-mode p[style*="color: #4a5568"] {
+    color: #d1d5db !important;
+}
+
+body.dark-mode .privacy-notice p {
+    color: #d1fae5 !important;
+}
+
+body.dark-mode .guidelines-box ul,
+body.dark-mode .guidelines-box li {
+    color: #fef3c7 !important;
+}
+
+/* Dark mode - Data preview with perfect padding */
+body.dark-mode .preview-container {
+    background: #0b1117 !important;
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 1.5rem !important;
+}
+
+body.dark-mode #dataPreview {
+    background: transparent !important;
+    color: #cbd5e1 !important;
+    padding: 1rem !important;
+    border-radius: 6px;
+    line-height: 1.6;
+}
+
+/* Dark mode - Inputs */
+body.dark-mode input[type="date"] {
+    background: #111827 !important;
+    color: #f9fafb !important;
+    border-color: #374151 !important;
+}
+
+body.dark-mode input:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.2) !important;
+}
+
+body.dark-mode label[style*="color: #4a5568"] {
+    color: #e5e7eb !important;
+}
+
+/* Dark mode - Buttons */
+body.dark-mode .btn,
+body.dark-mode .export-btn {
+    background: #4f46e5 !important;
+    color: #fff !important;
+}
+
+body.dark-mode .btn:hover,
+body.dark-mode .export-btn:hover {
+    background: #4338ca !important;
+}
+
+body.dark-mode .btn[style*="background: #ed8936"] {
+    background: #ea580c !important;
+}
+
+body.dark-mode .btn[style*="background: #38a169"] {
+    background: #16a34a !important;
+}
+
+body.dark-mode .btn[style*="background: #4a5568"] {
+    background: #475569 !important;
+}
+
+/* Dark mode - Data cards */
+body.dark-mode .data-card {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #e5e7eb;
+}
+
+body.dark-mode .data-card h4 {
+    color: #f9fafb !important;
+}
+
+/* Target white containers and light backgrounds */
+body.dark-mode div[style*="background: white"] {
+    background: #071127 !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    color: #e6eef6 !important;
+}
+
+/* Gradient stat cards - keep the gradient but ensure text is readable */
+body.dark-mode div[style*="linear-gradient"] { color: #ffffff !important; }
+
+/* Pale notice and selector boxes */
+body.dark-mode div[style*="background: #e6fffa"],
+body.dark-mode div[style*="background: #f7fafc"],
+body.dark-mode div[style*="background: #fffaf0"] {
+    background: #071127 !important;
+    border-color: rgba(255,255,255,0.04) !important;
+    color: #e6eef6 !important;
+}
+
+/* Headings and paragraph overrides for inline color styles */
+body.dark-mode h2[style*="color: #4a5568"],
+body.dark-mode h3[style*="color: #4a5568"],
+body.dark-mode h4[style*="color: #234e52"],
+body.dark-mode p[style*="color: #718096"] {
+    color: #f8fafc !important;
+}
+
+/* Inputs, selects, date controls, and textarea */
+body.dark-mode input[type="date"],
+body.dark-mode input[type="text"],
+body.dark-mode textarea,
+body.dark-mode select {
+    background: #021223 !important;
+    color: #e6eef6 !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Buttons and export actions */
+body.dark-mode .btn, body.dark-mode .export-btn { background: #4c51bf !important; color: #fff !important; }
+body.dark-mode .export-btn:hover { background: #3b43a6 !important; }
+
+/* Data preview preformatted block */
+body.dark-mode #dataPreview { background: #021922 !important; color: #d7eef6 !important; border-radius: 6px; }
+
+/* Data cards and lists */
+body.dark-mode .data-card { background: #071127 !important; border-color: #243145 !important; color: #e6eef6 !important; }
+body.dark-mode .data-card h4 { color: #f8fafc !important; }
+
+/* Usage guideline lists */
+body.dark-mode h5[style*="color: #744210"], body.dark-mode ul[style*="color: #744210"] { color: #f6e7d2 !important; }
+
+/* Toast message colors (created by showMessage) will inherit dark button backgrounds; ensure readability */
+body.dark-mode div[style*="position: fixed"][style*="top: 20px"] { color: #fff !important; }
 </style>
 
 <script>

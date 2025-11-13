@@ -133,6 +133,48 @@
 .badge-low { background: #c6f6d5; color: #276749; }
 </style>
 
+/* Dark-mode overrides: make text and UI elements high-contrast for dark theme */
+<style>
+/* Override white backgrounds and common inline colors */
+body.dark-mode div[style*="background: white"] {
+    background: #071127 !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    color: #e6eef6 !important;
+}
+
+body.dark-mode h2[style*="color: #4a5568"],
+body.dark-mode h3[style*="color: #c53030"],
+body.dark-mode h4[style*="color: #2d3748"],
+body.dark-mode h4[style*="color: #4a5568"],
+body.dark-mode p[style*="color: #718096"] {
+    color: #f8fafc !important;
+}
+
+/* Category buttons */
+body.dark-mode .symptom-cat-btn { background: #0b1220 !important; border-color: #233044 !important; color: #e6eef6 !important; }
+body.dark-mode .symptom-cat-btn.active, body.dark-mode .symptom-cat-btn:hover { background: #4c51bf !important; color: #fff !important; border-color: #4c51bf !important; }
+
+/* Symptom cards */
+body.dark-mode .symptom-card { background: #071127 !important; border-color: #243145 !important; color: #e6eef6 !important; }
+body.dark-mode .symptom-card:hover { box-shadow: 0 8px 26px rgba(2,6,23,0.6) !important; border-color: #4c51bf !important; }
+body.dark-mode .symptom-card h3[style*="color: #2d3748"] { color: #f8fafc !important; }
+body.dark-mode .symptom-card p[style*="color: #718096"] { color: #cbd5e1 !important; }
+
+/* Warning badges */
+body.dark-mode .warning-badge { background: rgba(255,255,255,0.04) !important; color: #f8fafc !important; }
+body.dark-mode .badge-high { background: #4c1f1f !important; color: #ffd6d6 !important; }
+body.dark-mode .badge-medium { background: #4a3a12 !important; color: #fff7d6 !important; }
+body.dark-mode .badge-low { background: #15382a !important; color: #dff3e6 !important; }
+
+/* Emergency boxes */
+body.dark-mode div[style*="background: #fed7d7"] { background: #3f1f21 !important; border-color: #5b1f1f !important; color: #ffd6d6 !important; }
+body.dark-mode div[style*="background: #fed7d7"] h3, body.dark-mode div[style*="background: #fed7d7"] h4 { color: #ffdede !important; }
+
+/* Lists and details */
+body.dark-mode ul { color: #cbd5e1 !important; }
+body.dark-mode li { color: #cbd5e1 !important; }
+</style>
+
 <script>
 // Symptom data
 const symptomsData = [

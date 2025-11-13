@@ -5,289 +5,114 @@
 
 {% block content %}
 <style>
-    .voice-assistant-container {
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    }
+    .voice-assistant-container { max-width: 980px; margin: 2rem auto; }
+    .va-card { background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    .assistant-header { text-align: center; margin-bottom: 1.25rem; }
+    .assistant-header h1 { font-size: 2rem; color: #1f2937; margin-bottom: 0.5rem; }
+    .assistant-subtitle { color: #4b5563; }
 
-    .assistant-header {
-        text-align: center;
-        margin-bottom: 3rem;
-    }
+    .browser-support { background: #e6fffa; border: 1px solid #81e6d9; border-radius: 12px; padding: 0.75rem 1rem; margin: 1rem 0; text-align: center; }
+    .browser-support ul { list-style: none; padding: 0; display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem 2rem; margin: 0.5rem 0 0; }
+    .browser-support li { display: flex; align-items: center; gap: 0.5rem; color: #0f766e; }
 
-    .assistant-header h1 {
-        font-size: 2.5rem;
-        color: #2d3748;
-        margin-bottom: 1rem;
-    }
+    .top-controls { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0 0.5rem; }
+    .control-btn { padding: 0.625rem 1rem; border-radius: 10px; border: 1px solid #e5e7eb; background: #ffffff; color: #111827; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .control-btn:hover { background: #f3f4f6; }
+    .control-btn[aria-pressed="true"] { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
 
-    .browser-support {
-        background: #e6fffa;
-        border: 1px solid #81e6d9;
-        border-radius: 10px;
-        padding: 1rem;
-        margin: 1rem 0;
-        text-align: center;
-    }
+    .voice-visualization { margin: 1.25rem 0; }
+    .visualizer { display: flex; justify-content: center; align-items: center; gap: 4px; height: 64px; }
+    .bar { width: 6px; height: 18px; background: #667eea; border-radius: 3px; transition: height 0.3s; }
 
-    .browser-support ul {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
-        margin: 1rem 0;
-    }
+    .mic-container { text-align: center; margin: 1rem 0 0.5rem; }
+    .mic-button { background: linear-gradient(135deg, #667eea, #764ba2); border: none; border-radius: 999px; width: 120px; height: 120px; cursor: pointer; transition: all 0.25s ease; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-size: 1.5rem; box-shadow: 0 10px 25px rgba(118,75,162,0.35); position: relative; }
+    .mic-button:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 18px 35px rgba(118,75,162,0.45); }
+    .mic-button.listening { background: linear-gradient(135deg, #ef4444, #dc2626); animation: pulse 1.5s infinite; }
+    .mic-button:disabled { background: #9ca3af; cursor: not-allowed; transform: none; box-shadow: none; }
+    .mic-icon { font-size: 2rem; margin-bottom: 0.25rem; }
+    .status-text { margin-top: 0.5rem; color: #4b5563; font-size: 0.95rem; text-align: center; }
+    .tip-text { text-align: center; color: #6b7280; font-size: 0.85rem; margin-top: 0.25rem; }
 
-    .browser-support li {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
+    .conversation { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 14px; padding: 1rem; max-height: 420px; overflow-y: auto; display: grid; gap: 0.75rem; }
+    .bubble { max-width: 82%; padding: 0.75rem 1rem; border-radius: 14px; line-height: 1.55; font-size: 1rem; word-wrap: break-word; animation: fadeIn 0.25s ease-in; }
+    .bubble.user { justify-self: end; color: #ffffff; background: linear-gradient(135deg, #4ECDC4, #45B7D1); border-bottom-right-radius: 6px; }
+    .bubble.assistant { justify-self: start; background: #ffffff; color: #111827; border: 1px solid #e5e7eb; border-bottom-left-radius: 6px; }
+    .bubble.error { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+    .bubble.system { background: #eef2ff; color: #3730a3; border-color: #c7d2fe; }
 
-    .voice-visualization {
-        margin: 2rem 0;
-    }
+    .suggestions { margin-top: 1.25rem; }
+    .suggestions h3 { margin-bottom: 0.75rem; color: #1f2937; text-align: center; }
+    .suggestion-chips { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .chip { background: #eef2ff; border: 1px solid #c7d2fe; padding: 0.5rem 0.875rem; border-radius: 999px; cursor: pointer; transition: all 0.2s; color: #3730a3; font-family: inherit; }
+    .chip:hover { background: #6366f1; color: white; border-color: #6366f1; transform: translateY(-1px); }
 
-    .visualizer {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 4px;
-        height: 60px;
-    }
+    .ai-features { margin-top: 1.25rem; padding: 1rem; background: #f7fafc; border-radius: 12px; border-left: 4px solid #805ad5; }
+    .ai-features h3 { color: #1f2937; margin-bottom: 0.5rem; text-align: center; }
+    .features-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; }
+    .feature-item { background: white; padding: 0.75rem 1rem; border-radius: 10px; text-align: center; font-weight: 500; color: #374151; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #e5e7eb; }
 
-    .bar {
-        width: 6px;
-        height: 20px;
-        background: #667eea;
-        border-radius: 3px;
-        transition: height 0.3s;
-    }
+    .error-message { background: #fed7d7; color: #b91c1c; padding: 0.875rem 1rem; border-radius: 10px; margin: 0.75rem 0; text-align: center; border-left: 4px solid #ef4444; }
+    .permission-help { background: #fff7ed; border: 1px solid #fdba74; border-radius: 10px; padding: 0.875rem 1rem; margin: 0.75rem 0; }
 
-    .mic-container {
-        text-align: center;
-        margin: 2rem 0;
-    }
+    @keyframes equalize { 0%{height:18px} 50%{height:58px} 100%{height:18px} }
+    @keyframes pulse { 0%{ transform:scale(1); box-shadow:0 8px 24px rgba(239,68,68,0.35)} 50%{ transform:scale(1.08); box-shadow:0 14px 32px rgba(239,68,68,0.45)} 100%{ transform:scale(1); box-shadow:0 8px 24px rgba(239,68,68,0.35)} }
+    @keyframes fadeIn { from{ opacity:0; transform: translateY(6px)} to{ opacity:1; transform: translateY(0)} }
+    .listening-animation { position:absolute; inset:-12px; border:3px solid rgba(239,68,68,0.8); border-radius:999px; animation: listeningPulse 1.8s infinite; }
+    @keyframes listeningPulse { 0%{ transform:scale(1); opacity:1 } 100%{ transform:scale(1.5); opacity:0 } }
 
-    .mic-button {
-        background: #667eea;
-        border: none;
-        border-radius: 50%;
-        width: 120px;
-        height: 120px;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.5rem;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        position: relative;
-    }
-
-    .mic-button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-    }
-
-    .mic-button.listening {
-        background: #e53e3e;
-        animation: pulse 1.5s infinite;
-    }
-
-    .mic-button:disabled {
-        background: #a0aec0;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    .mic-icon {
-        font-size: 2.5rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .command-display, .response-display {
-        background: #f7fafc;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-left: 4px solid #667eea;
-        min-height: 80px;
-    }
-
-    .command-text, .response-text {
-        font-size: 1.1rem;
-        color: #2d3748;
-    }
-
-    .suggestions {
-        margin-top: 2rem;
-    }
-
-    .suggestions h3 {
-        margin-bottom: 1rem;
-        color: #2d3748;
-    }
-
-    .suggestion-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        justify-content: center;
-    }
-
-    .chip {
-        background: #edf2f7;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: all 0.3s;
-        color: #4a5568;
-        font-family: inherit;
-    }
-
-    .chip:hover {
-        background: #667eea;
-        color: white;
-    }
-
-    .ai-features {
-        margin-top: 2rem;
-        padding: 1.5rem;
-        background: #f7fafc;
-        border-radius: 10px;
-        border-left: 4px solid #805ad5;
-    }
-
-    .ai-features h3 {
-        color: #2d3748;
-        margin-bottom: 1rem;
-    }
-
-    .features-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-
-    .feature-item {
-        background: white;
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        text-align: center;
-        font-weight: 500;
-        color: #4a5568;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .status-text {
-        margin-top: 1rem;
-        color: #4a5568;
-        font-size: 0.9rem;
-        text-align: center;
-    }
-
-    .error-message {
-        background: #fed7d7;
-        color: #c53030;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 1rem 0;
-        text-align: center;
-        border-left: 4px solid #e53e3e;
-    }
-
-    .permission-help {
-        background: #fffaf0;
-        border: 1px solid #ed8936;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 1rem 0;
-    }
-
-    @keyframes equalize {
-        0% { height: 20px; }
-        50% { height: 60px; }
-        100% { height: 20px; }
-    }
-
-    @keyframes pulse {
-        0% { transform: scale(1); box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4); }
-        50% { transform: scale(1.1); box-shadow: 0 8px 25px rgba(229, 62, 62, 0.6); }
-        100% { transform: scale(1); box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4); }
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in {
-        animation: fadeIn 0.5s ease-in-out;
-    }
-
-    .listening-animation {
-        position: absolute;
-        top: -10px;
-        left: -10px;
-        right: -10px;
-        bottom: -10px;
-        border: 3px solid #e53e3e;
-        border-radius: 50%;
-        animation: listeningPulse 2s infinite;
-    }
-
-    @keyframes listeningPulse {
-        0% { transform: scale(1); opacity: 1; }
-        100% { transform: scale(1.5); opacity: 0; }
-    }
+    /* Dark mode adjustments */
+    body.dark-mode .va-card { background: #0f172a; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    body.dark-mode .assistant-header h1 { color: #e5e7eb; }
+    body.dark-mode .assistant-subtitle { color: #cbd5e1; }
+    body.dark-mode .browser-support { background: rgba(20,83,45,0.25); border-color: rgba(16,185,129,0.35); color: #d1fae5; }
+    body.dark-mode .browser-support li { color: #a7f3d0; }
+    body.dark-mode .control-btn { background: #111827; color: #e5e7eb; border-color: rgba(255,255,255,0.08); }
+    body.dark-mode .control-btn:hover { background: #1f2937; }
+    body.dark-mode .control-btn[aria-pressed="true"] { background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.35); color: #93c5fd; }
+    body.dark-mode .conversation { background: #0b1220; border-color: rgba(255,255,255,0.08); }
+    body.dark-mode .bubble.assistant { background: #0f172a; color: #e5e7eb; border-color: rgba(255,255,255,0.08); }
+    body.dark-mode .bubble.user { background: linear-gradient(135deg, #3B82F6, #2563EB); }
+    body.dark-mode .bubble.error { background: rgba(239,68,68,0.15); color: #fecaca; border-color: rgba(239,68,68,0.25); }
+    body.dark-mode .bubble.system { background: rgba(14,165,233,0.12); color: #93c5fd; border-color: rgba(14,165,233,0.25); }
+    body.dark-mode .ai-features { background: #0b1220; border-left-color: #4f46e5; }
+    body.dark-mode .feature-item { background: #0f172a; border-color: rgba(255,255,255,0.08); color: #e5e7eb; box-shadow: none; }
+    body.dark-mode .chip { background: rgba(14,165,233,0.12); border-color: rgba(14,165,233,0.25); color: #93c5fd; }
+    body.dark-mode .chip:hover { background: #0ea5e9; border-color: #0ea5e9; }
 
     @media (max-width: 768px) {
-        .voice-assistant-container {
-            margin: 1rem;
-            padding: 1rem;
-        }
-        
-        .suggestion-chips {
-            justify-content: center;
-        }
-        
-        .features-list {
-            grid-template-columns: 1fr;
-        }
-        
-        .mic-button {
-            width: 100px;
-            height: 100px;
-        }
+        .voice-assistant-container { margin: 1rem; }
+        .va-card { padding: 1rem; }
+        .features-list { grid-template-columns: 1fr; }
+        .mic-button { width: 100px; height: 100px; }
+        .conversation { max-height: 360px; }
     }
 </style>
 
 <div class="voice-assistant-container">
-    <div class="assistant-header">
-        <h1>মন বন্ধু - AI ভয়েস সহায়ক</h1>
-        <p>বাংলা, ইংরেজি বা মিশ্র ভাষায় কথা বলুন। আমি AI দিয়ে আপনার সাহায্য করব</p>
-        
-        <div class="browser-support">
-            <strong>সর্বোচ্চ সামর্থ্যের জন্য:</strong>
-            <ul>
-                <li>✅ Chrome Browser</li>
-                <li>✅ HTTPS Connection</li>
-                <li>✅ Microphone Access</li>
-            </ul>
-            <small>ভয়েস রিকগনিশন শুধুমাত্র Chrome ব্রাউজারে সেরা কাজ করে</small>
+    <div class="glass-morphism va-card" id="va-container">
+        <div class="assistant-header">
+            <h1 class="page-heading">মনবন্ধু — AI ভয়েস সহায়ক</h1>
+            <p class="assistant-subtitle">বাংলা, ইংরেজি বা মিশ্র ভাষায় কথা বলুন — আমি সহায়তা করব।</p>
+            <div class="top-controls">
+                <button id="ttsToggle" class="control-btn" aria-pressed="true" aria-label="Toggle voice reply">
+                    <span>🔈</span> <span>ভয়েস চালু</span>
+                </button>
+                <button id="clearBtn" class="control-btn" aria-label="Clear conversation">
+                    <span>🧹</span> <span>কথোপকথন মুছুন</span>
+                </button>
+            </div>
+            <div class="browser-support">
+                <strong>সর্বোচ্চ সামর্থ্যের জন্য:</strong>
+                <ul>
+                    <li>✅ Chrome Browser</li>
+                    <li>✅ HTTPS Connection</li>
+                    <li>✅ Microphone Access</li>
+                </ul>
+                <small>ভয়েস রিকগনিশন Chrome-এ সবচেয়ে নির্ভুল কাজ করে।</small>
+            </div>
         </div>
-    </div>
 
-    <div class="assistant-interface">
+        <div class="assistant-interface">
         <!-- Error Messages -->
         <div id="errorMessage" class="error-message" style="display: none;"></div>
 
@@ -315,19 +140,10 @@
                 <span class="mic-text">কথা বলুন</span>
             </button>
             <div id="statusText" class="status-text">মাইক্রোফোন বাটন চাপুন</div>
+            <div class="tip-text">টিপ: কথা বলতে স্পেসবার চাপুন</div>
         </div>
 
-        <div class="command-display">
-            <div id="commandText" class="command-text">
-                আপনার কমান্ড এখানে দেখানো হবে...
-            </div>
-        </div>
-
-        <div class="response-display">
-            <div id="responseText" class="response-text">
-                AI সহায়কের উত্তর এখানে দেখানো হবে...
-            </div>
-        </div>
+        <div id="conversation" class="conversation" aria-live="polite" aria-atomic="false"></div>
 
         <div class="suggestions">
             <h3>উদাহরণ কমান্ড:</h3>
@@ -350,6 +166,7 @@
                 <div class="feature-item">🔊 প্রাকৃতিক কণ্ঠস্বর</div>
             </div>
         </div>
+        </div>
     </div>
 </div>
 
@@ -359,6 +176,7 @@
             this.isListening = false;
             this.recognition = null;
             this.synthesis = window.speechSynthesis;
+            this.ttsEnabled = true;
             this.awaitingMoodResponse = false;
             this.supported = false;
             this.initializeVoiceRecognition();
@@ -454,6 +272,8 @@
         setupEventListeners() {
             const micButton = document.getElementById('micButton');
             const suggestionChips = document.querySelectorAll('.chip');
+            const ttsToggle = document.getElementById('ttsToggle');
+            const clearBtn = document.getElementById('clearBtn');
 
             micButton.addEventListener('click', () => {
                 this.toggleListening();
@@ -465,6 +285,23 @@
                     this.processCommand(command);
                 });
             });
+
+            if (ttsToggle) {
+                ttsToggle.addEventListener('click', () => {
+                    this.ttsEnabled = !this.ttsEnabled;
+                    ttsToggle.setAttribute('aria-pressed', this.ttsEnabled ? 'true' : 'false');
+                    const icon = this.ttsEnabled ? '🔈' : '🔇';
+                    const label = this.ttsEnabled ? 'ভয়েস চালু' : 'ভয়েস বন্ধ';
+                    ttsToggle.innerHTML = `<span>${icon}</span> <span>${label}</span>`;
+                });
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    const convo = document.getElementById('conversation');
+                    if (convo) convo.innerHTML = '';
+                });
+            }
 
             // Add keyboard shortcut (Spacebar)
             document.addEventListener('keydown', (e) => {
@@ -589,54 +426,30 @@
         }
 
         displayCommand(command) {
-            const commandElement = document.getElementById('commandText');
-            commandElement.textContent = `আপনি বলেছেন: "${command}"`;
-            commandElement.style.color = '#2d3748';
-            commandElement.classList.add('fade-in');
-            
-            setTimeout(() => {
-                commandElement.classList.remove('fade-in');
-            }, 500);
+            const convo = document.getElementById('conversation');
+            if (!convo) return;
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble user';
+            bubble.textContent = command;
+            convo.appendChild(bubble);
+            convo.scrollTop = convo.scrollHeight;
         }
 
         displayResponse(message, type) {
-            const responseElement = document.getElementById('responseText');
-            responseElement.textContent = message;
-            responseElement.classList.add('fade-in');
-            
-            // Reset styles
-            responseElement.style.cssText = '';
-            responseElement.className = 'response-text';
-            
-            // Apply type-specific styles
-            switch(type) {
-                case 'error':
-                    responseElement.style.color = '#e53e3e';
-                    responseElement.style.borderLeftColor = '#e53e3e';
-                    responseElement.style.fontWeight = 'bold';
-                    break;
-                case 'mood_response':
-                case 'mood_prompt':
-                    responseElement.style.color = '#805ad5';
-                    responseElement.style.borderLeftColor = '#805ad5';
-                    break;
-                case 'emergency':
-                    responseElement.style.color = '#e53e3e';
-                    responseElement.style.borderLeftColor = '#e53e3e';
-                    responseElement.style.fontWeight = 'bold';
-                    responseElement.style.background = '#fed7d7';
-                    break;
-                default:
-                    responseElement.style.color = '#2d3748';
-                    responseElement.style.borderLeftColor = '#667eea';
-            }
-
-            setTimeout(() => {
-                responseElement.classList.remove('fade-in');
-            }, 500);
+            const convo = document.getElementById('conversation');
+            if (!convo) return;
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble assistant';
+            if (type === 'error') bubble.classList.add('error');
+            if (type === 'mood_prompt' || type === 'mood_response') bubble.classList.add('system');
+            if (type === 'emergency') bubble.classList.add('error');
+            bubble.textContent = message;
+            convo.appendChild(bubble);
+            convo.scrollTop = convo.scrollHeight;
         }
 
         speakResponse(text, language) {
+            if (!this.ttsEnabled) return;
             if (!this.synthesis) {
                 console.warn('Speech synthesis not supported');
                 return;

@@ -4,9 +4,9 @@
 <main class="container mx-auto px-4 py-8">
     <div class="glass-morphism p-8 rounded-3xl">
     <!-- Pregnancy Tracker -->
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-        <h2 style="color: #4a5568; margin-bottom: 1rem;">💖 গর্ভাবস্থা ট্র্যাকার</h2>
-        <p style="color: #718096; margin-bottom: 2rem;">আপনার গর্ভাবস্থার যত্ন ও চেকআপের সময়সূচী ট্র্যাক করুন</p>
+    <div class="content-card">
+        <h2 class="section-title">💖 গর্ভাবস্থা ট্র্যাকার</h2>
+        <p class="section-description">আপনার গর্ভাবস্থার যত্ন ও চেকআপের সময়সূচী ট্র্যাক করুন</p>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
             <!-- Pregnancy Form -->
@@ -69,9 +69,9 @@
     </div>
 
     <!-- Vaccination Tracker -->
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
-        <h2 style="color: #4a5568; margin-bottom: 1rem;">💉 শিশু টিকাকরণ ট্র্যাকার</h2>
-        <p style="color: #718096; margin-bottom: 2rem;">আপনার শিশুর টিকার সম্পূর্ণ সময়সূচী ট্র্যাক করুন</p>
+    <div class="content-card">
+        <h2 class="section-title">💉 শিশু টিকাকরণ ট্র্যাকার</h2>
+        <p class="section-description">আপনার শিশুর টিকার সম্পূর্ণ সময়সূচী ট্র্যাক করুন</p>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
             <!-- Add Child Form -->
@@ -160,6 +160,122 @@
     border-radius: 8px;
     border-left: 4px solid #667eea;
     margin-bottom: 1rem;
+}
+
+/* Dark mode enhancements */
+.content-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    transition: all 0.3s ease;
+}
+
+.section-title {
+    color: #4a5568;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.section-description {
+    color: #718096;
+    margin-bottom: 2rem;
+    transition: color 0.3s ease;
+}
+
+/* Dark mode styles */
+body.dark-mode .content-card {
+    background: #1a202c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .section-title {
+    color: #f7fafc;
+}
+
+body.dark-mode .section-description {
+    color: #e2e8f0;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #f7fafc;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+body.dark-mode .checkup-card {
+    background: #2d3748;
+    color: #f7fafc;
+    border-left: 4px solid #667eea;
+}
+
+body.dark-mode .vaccine-card {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #f7fafc;
+}
+
+body.dark-mode .vaccine-card.completed {
+    background: #234e52;
+    border-color: #38a169;
+}
+
+body.dark-mode .vaccine-card.pending {
+    background: #2b3544;
+    border-color: #ed8936;
+}
+
+body.dark-mode .vaccine-card.overdue {
+    background: #433;
+    border-color: #e53e3e;
+}
+
+body.dark-mode label {
+    color: #e2e8f0 !important;
+}
+
+body.dark-mode h3,
+body.dark-mode h4 {
+    color: #f7fafc !important;
+}
+
+body.dark-mode p,
+body.dark-mode div {
+    color: #e2e8f0;
+}
+
+/* Enhanced form container dark mode */
+body.dark-mode div[style*="background: #f0fff4"] {
+    background: #1a365d !important;
+    border-left: 4px solid #38a169;
+}
+
+body.dark-mode div[style*="background: #fffaf0"] {
+    background: #2d3748 !important;
+    border-left: 4px solid #dd6b20;
+}
+
+/* Warning section dark mode */
+body.dark-mode div[style*="background: #fff3cd"] {
+    background: #744210 !important;
+    border-color: #d69e2e;
+}
+
+body.dark-mode div[style*="background: #fff3cd"] h4,
+body.dark-mode div[style*="background: #fff3cd"] p,
+body.dark-mode div[style*="background: #fff3cd"] ul,
+body.dark-mode div[style*="background: #fff3cd"] li {
+    color: #fefcbf !important;
 }
 </style>
 

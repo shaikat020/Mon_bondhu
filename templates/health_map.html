@@ -3,25 +3,26 @@
 {% block content %}
 <main class="container mx-auto px-4 py-8">
     <div class="glass-morphism p-8 rounded-3xl">
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+    <div class="content-card" style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
         <h2 style="color: #4a5568; margin-bottom: 1rem;">আপনার নিকটস্থ স্বাস্থ্য সুবিধা খুঁজুন</h2>
-        <p style="color: #718096; margin-bottom: 2rem;">আপনার এলাকার ক্লিনিক, হাসপাতাল, ফার্মেসি এবং কমিউনিটি স্বাস্থ্যকর্মী খুঁজে বের করুন</p>
+        <p style="color: #464646; margin-bottom: 2rem;">আপনার এলাকার ক্লিনিক, হাসপাতাল, ফার্মেসি এবং কমিউনিটি স্বাস্থ্যকর্মী খুঁজে বের করুন</p>
         
         <!-- Search Form -->
-        <div style="background: #f7fafc; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+        <div class="search-form-container" style="background: #ffffff; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
             <form method="GET" style="display: grid; grid-template-columns: 1fr auto; gap: 1rem;">
                 <input type="text" name="upazila" placeholder="আপনার উপজেলা বা ইউনিয়নের নাম লিখুন..." 
                     value="{{ request.GET.upazila }}"
-                    style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px;">
+                    style="padding: 1rem; border: 2px solid #718096; border-radius: 10px; color: #2d3748; font-weight: 500; background: #f8fafc; box-shadow: 0 2px 4px rgba(102,126,234,0.1); transition: all 0.3s ease;"
+                    class="input-custom">
                 <button type="submit" class="btn" style="background: #667eea; color: white;">খুঁজুন</button>
             </form>
             
             <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                <button type="button" onclick="filterFacilities('all')" class="filter-btn active">সব</button>
-                <button type="button" onclick="filterFacilities('clinic')" class="filter-btn">ক্লিনিক</button>
-                <button type="button" onclick="filterFacilities('hospital')" class="filter-btn">হাসপাতাল</button>
-                <button type="button" onclick="filterFacilities('pharmacy')" class="filter-btn">ফার্মেসি</button>
-                <button type="button" onclick="filterFacilities('chw')" class="filter-btn">স্বাস্থ্যকর্মী</button>
+                <button type="button" onclick="filterFacilities('all')" class="filter-btn active" style="color: #4c51bf;">সব</button>
+                <button type="button" onclick="filterFacilities('clinic')" class="filter-btn" style="color: #2b6cb0;">ক্লিনিক</button>
+                <button type="button" onclick="filterFacilities('hospital')" class="filter-btn" style="color: #2c7a7b;">হাসপাতাল</button>
+                <button type="button" onclick="filterFacilities('pharmacy')" class="filter-btn" style="color: #975a16;">ফার্মেসি</button>
+                <button type="button" onclick="filterFacilities('chw')" class="filter-btn" style="color: #6b46c1;">স্বাস্থ্যকর্মী</button>
             </div>
         </div>
 
@@ -66,7 +67,7 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div style="text-align: center; padding: 3rem; color: #718096;">
+            <div style="text-align: center; padding: 3rem; color: #141414;">
                 <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
                 <h3>কোন স্বাস্থ্য সুবিধা পাওয়া যায়নি</h3>
                 <p>অনুগ্রহ করে অন্য উপজেলা বা ইউনিয়নের নাম দিয়ে খুঁজুন</p>
@@ -106,6 +107,87 @@
     border-color: #667eea;
 }
 
+/* Base content card */
+.content-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    transition: all 0.3s ease;
+}
+
+.search-form-container {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+/* Dark-mode overrides for this page to ensure high contrast and visibility */
+body.dark-mode .content-card {
+    background: #1a202c !important;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+body.dark-mode .search-form-container {
+    background: #2d3748 !important;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Headings and descriptions with inline color values */
+body.dark-mode h2[style*="color: #4a5568"],
+body.dark-mode h3[style*="color: #4a5568"] {
+    color: #f7fafc !important;
+}
+
+body.dark-mode p[style*="color: #464646"],
+body.dark-mode p[style*="color: #718096"],
+body.dark-mode p[style*="color: #4a5568"] {
+    color: #cbd5e1 !important; /* light gray-blue for readability */
+}
+
+/* Input field */
+body.dark-mode .input-custom {
+    background: #111827 !important;
+    border-color: #374151 !important;
+    color: #f8fafc !important;
+}
+body.dark-mode .input-custom::placeholder { color: #94a3b8 !important; }
+body.dark-mode .input-custom:focus { box-shadow: 0 0 0 3px rgba(76,81,191,0.18) !important; }
+
+/* Filter buttons */
+body.dark-mode .filter-btn { background: #0b1220 !important; border-color: #263043 !important; color: #e6eef6 !important; }
+body.dark-mode .filter-btn:hover { background: #172033 !important; border-color: #4c51bf !important; }
+body.dark-mode .filter-btn.active { background: #4c51bf !important; color: #fff !important; border-color: #4c51bf !important; }
+
+/* Facility cards */
+body.dark-mode .facility-card { background: #0b1220 !important; border-color: #263043 !important; color: #e6eef6 !important; }
+body.dark-mode .facility-card:hover { box-shadow: 0 6px 18px rgba(2,6,23,0.6) !important; border-color: #4c51bf !important; }
+body.dark-mode .facility-card h3[style*="color: #2d3748"] { color: #f8fafc !important; }
+body.dark-mode .facility-card p[style*="color: #4a5568"] { color: #cbd5e1 !important; }
+
+/* Facility badges color adjustments for dark mode */
+body.dark-mode .facility-badge.clinic { background: #1e3a62 !important; color: #bee3f8 !important; }
+body.dark-mode .facility-badge.hospital { background: #143d2b !important; color: #c6f6d5 !important; }
+body.dark-mode .facility-badge.pharmacy { background: #5b370f !important; color: #fefcbf !important; }
+body.dark-mode .facility-badge.chw { background: #3a2170 !important; color: #e9d8fd !important; }
+
+/* CHW details box */
+body.dark-mode div[style*="background: #e6fffa"] { background: #123a3f !important; color: #dff3f0 !important; border-left-color: #0ea5a3 !important; }
+
+/* Offline info */
+body.dark-mode div[style*="background: #fff3cd"] { background: #3f2a14 !important; border-color: #7c4b12 !important; }
+body.dark-mode div[style*="background: #fff3cd"] h4, body.dark-mode div[style*="background: #fff3cd"] p, body.dark-mode div[style*="background: #fff3cd"] li { color: #ffefc2 !important; }
+
+/* No-results message */
+body.dark-mode div[style*="text-align: center; padding: 3rem;"] { color: #cbd5e1 !important; }
+
+/* Make inline-colored spans (location) readable */
+body.dark-mode span[style*="color: #718096"] { color: #94a3b8 !important; }
+
+/* Buttons in dark mode */
+body.dark-mode .btn[style*="background: #667eea"] { background: #4c51bf !important; color: #fff !important; }
+
 .facility-card {
     background: white;
     padding: 1.5rem;
@@ -131,6 +213,46 @@
 .facility-badge.hospital { background: #c6f6d5; color: #276749; }
 .facility-badge.pharmacy { background: #fefcbf; color: #744210; }
 .facility-badge.chw { background: #e9d8fd; color: #553c9a; }
+
+/* Custom input style */
+.input-custom {
+    transition: all 0.3s ease;
+}
+
+.input-custom:focus {
+    outline: none;
+    border-color: #4c51bf;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+    background: white;
+}
+
+.input-custom::placeholder {
+    background: linear-gradient(45deg, #667eea, #4c51bf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+.input-custom:hover {
+    border-color: #4c51bf;
+    box-shadow: 0 2px 6px rgba(102,126,234,0.2);
+}
+
+/* Filter button hover states */
+.filter-btn:hover {
+    background: #f7fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-btn.active {
+    background: #667eea !important;
+    color: white !important;
+    border-color: #667eea;
+    box-shadow: 0 2px 4px rgba(102,126,234,0.3);
+}
 </style>
 
 <script>

@@ -39,10 +39,10 @@
             color: #2D3436;
         }
         
-        /* Dark mode - Softer, eye-friendly dark theme */
+        /* Dark mode - Enhanced with better contrast and readability */
         body.dark-mode {
-            background: linear-gradient(-45deg, #2C3E50, #2E1437, #1C2833, #1E3D59);
-            color: #ECF0F1;
+            background: linear-gradient(-45deg, #1a1a2e, #16213e, #1f3a5f, #2c3e50);
+            color: #f8fafc;
         }
         @keyframes gradientShift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
         /* Improved glass morphism effect */
@@ -272,9 +272,15 @@
         }
         
         body.dark-mode .glass-morphism { 
-            background: rgba(24,24,27,0.7);
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        /* Enhanced dark mode navigation styles */
+        body.dark-mode header {
+            background: linear-gradient(to right, #1e293b, #0f172a);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         /* Dark mode input styles */
@@ -313,15 +319,40 @@
         body.dark-mode input:focus,
         body.dark-mode select:focus,
         body.dark-mode textarea:focus {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56,189,248,0.2);
         }
 
         body.dark-mode input::placeholder,
         body.dark-mode select::placeholder,
         body.dark-mode textarea::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Enhanced dark mode text styles */
+        body.dark-mode h1, 
+        body.dark-mode h2, 
+        body.dark-mode h3, 
+        body.dark-mode h4, 
+        body.dark-mode h5, 
+        body.dark-mode h6 {
+            color: #f8fafc;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        body.dark-mode p {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode a {
+            color: #38bdf8;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode a:hover {
+            color: #0ea5e9;
+            text-shadow: 0 0 8px rgba(56,189,248,0.3);
         }
 
         /* Keep headings consistent in dark mode */
@@ -347,23 +378,44 @@
 
         body.dark-mode .nav-link,
         body.dark-mode .mobile-nav-link {
-            color: #E2E8F0;
+            color: #f1f5f9;
+            position: relative;
         }
 
         body.dark-mode .nav-link:hover,
         body.dark-mode .mobile-nav-link:hover { 
-            color: #60A5FA;
-            text-shadow: 0 0 20px rgba(96,165,250,0.3);
+            color: #38bdf8;
+            text-shadow: 0 0 20px rgba(56,189,248,0.4);
+            background: rgba(56,189,248,0.1);
+        }
+
+        body.dark-mode .nav-link::after,
+        body.dark-mode .mobile-nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: #38bdf8;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .nav-link:hover::after,
+        body.dark-mode .mobile-nav-link:hover::after {
+            width: 80%;
+            left: 10%;
         }
 
         body.dark-mode .tab-active {
-            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-            box-shadow: 0 4px 12px rgba(37,99,235,0.2);
+            background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
+            box-shadow: 0 4px 12px rgba(14,165,233,0.3);
         }
 
         body.dark-mode .health-card {
-            background: linear-gradient(135deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.95) 100%);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, rgba(15,23,42,0.98) 0%, rgba(30,41,59,0.98) 100%);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         /* Enhanced theme toggle button */
@@ -430,12 +482,12 @@
     </div>
 
     <!-- Header -->
-    <header class="glass-morphism text-white shadow-2xl sticky top-0 z-40">
+    <header class="bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-lg sticky top-0 z-40">
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
                     <div class="morphing-shape floating" style="width: 50px; height: 50px;"></div>
-                    <h1 class="text-3xl font-bold glitch" data-text="মনবন্ধু">মনবন্ধু</h1>
+                    <h1 class="text-3xl font-bold glitch" data-text="মনবন্ধু"><a href="{% url 'home' %}#home">মনবন্ধু</a></h1>
                 </div>
                 <div class="flex items-center gap-3">
                     <button id="themeToggle" class="theme-toggle hidden md:inline-flex" aria-label="Toggle theme">
@@ -490,7 +542,7 @@
             </div>
             
             <div class="border-t border-white border-opacity-20 mt-6 pt-6 text-center">
-                <p class="text-white opacity-90">© ২০২৩ মনবন্ধু। সর্বস্বত্ব সংরক্ষিত।</p>
+                <p class="text-white opacity-90">© ২০২৫ মনবন্ধু। সর্বস্বত্ব সংরক্ষিত।</p>
             </div>
         </div>
     </footer>

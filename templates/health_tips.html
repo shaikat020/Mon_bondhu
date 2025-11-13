@@ -3,7 +3,7 @@
 {% block content %}
 <main class="container mx-auto px-4 py-8">
     <div class="glass-morphism p-8 rounded-3xl">
-    <div style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+    <div id="health-tips" class="content-card" style="background: white; padding: 2rem; border-radius: 15px; margin: 2rem 0;">
         <h2 style="color: #4a5568; margin-bottom: 1rem;">মৌসুমী স্বাস্থ্য টিপস</h2>
         <p style="color: #718096; margin-bottom: 2rem;">বছরের বিভিন্ন সময়ে সাধারণ স্বাস্থ্য সমস্যা ও প্রতিরোধের উপায়</p>
         
@@ -224,6 +224,54 @@
 }
 </style>
 
+<!-- Dark mode styles (scoped to Health Tips page) -->
+<style>
+/* Card container */
+body.dark-mode #health-tips {
+    background: #1a202c !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Headings and text inside the page */
+body.dark-mode #health-tips h2 { color: #f7fafc !important; }
+body.dark-mode #health-tips p[style*="color: #718096"] { color: #e2e8f0 !important; }
+
+/* Season selector buttons */
+body.dark-mode .season-btn {
+    background: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+}
+body.dark-mode .season-btn:hover,
+body.dark-mode .season-btn.active {
+    background: #4c51bf;
+    border-color: #4c51bf;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(76, 81, 191, 0.25);
+}
+
+/* Tip cards */
+body.dark-mode .tip-card {
+    background: #2d3748;
+    border-left-color: #4c51bf;
+}
+body.dark-mode .tip-card h4[style*="color: #2d3748"] { color: #f7fafc !important; }
+body.dark-mode .tip-card p[style*="color: #718096"],
+body.dark-mode .tip-card ul[style*="color: #718096"] { color: #e2e8f0 !important; }
+
+/* Icon color blocks inside tips - tone down for dark mode */
+body.dark-mode .tip-card div[style*="background: #fed7d7"] { background: #742a2a !important; color: #fecaca !important; }
+body.dark-mode .tip-card div[style*="background: #c6f6d5"] { background: #22543d !important; color: #c6f6d5 !important; }
+body.dark-mode .tip-card div[style*="background: #bee3f8"] { background: #2a4365 !important; color: #bee3f8 !important; }
+body.dark-mode .tip-card div[style*="background: #fefcbf"] { background: #744210 !important; color: #fefcbf !important; }
+body.dark-mode .tip-card div[style*="background: #e9d8fd"] { background: #44337a !important; color: #e9d8fd !important; }
+
+/* Gradient season headers already readable; just add subtle shadow in dark */
+body.dark-mode .season-content > div[style*="linear-gradient"] {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+</style>
+
 <script>
 // Season data
 const seasonData = {
@@ -300,7 +348,7 @@ function updateCurrentSeason() {
         ];
         whenToSeeDoctor = [
             "শ্বাসকষ্ট বা বুকে ব্যথা হলে",
-            "জ্বর ১০১°F এর以上 থাকলে",
+            "জ্বর ১০১°F এর থাকলে",
             "কাশি ১ সপ্তাহের বেশি থাকলে",
             "শিশুর শ্বাস cepat হলে"
         ];
